@@ -22,8 +22,8 @@ public class Lote {
     @Column(unique = true, nullable = false)
     private String numeroLote;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "producto_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "producto_id", nullable = true)
     private Producto producto;
 
     private LocalDateTime fechaInicio;
@@ -32,6 +32,5 @@ public class Lote {
 
     @Enumerated(EnumType.STRING)
     private EstadoLote estado;
-
 
 }
