@@ -15,13 +15,13 @@ public class ParametroCalidad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "sector_id")
-    private Sector sector;
-
+    @Column(name = "nombre_parametro", nullable = false)
     private String nombreParametro;
 
-    // Muestra el orden en que se deben evaluar los parámetros
+    @Column(nullable = false)
     private Integer orden;
 
+    @ManyToOne
+    @JoinColumn(name = "sector_id", nullable = false)
+    private Sector sector;
 }

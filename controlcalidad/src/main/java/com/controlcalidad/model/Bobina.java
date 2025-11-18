@@ -45,4 +45,6 @@ public class Bobina {
     @Enumerated(EnumType.STRING)
     private EstadoCalidadBobina estadoCalidad;
 
+    private Boolean aprobada;
+
 }
