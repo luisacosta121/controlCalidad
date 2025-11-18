@@ -1,11 +1,14 @@
 package com.controlcalidad.service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.controlcalidad.dto.ControlCalidadRequestDTO;
 import com.controlcalidad.dto.ControlIndividualDTO;
+import com.controlcalidad.dto.ControlResultadoDTO;
 import com.controlcalidad.enums.ValorControl;
 import com.controlcalidad.enums.EstadoCalidadBobina;
 import com.controlcalidad.model.Bobina;
@@ -84,4 +87,41 @@ public class ControlCalidadService {
 
         return aprobada;
     }
+
+    public ControlResultadoDTO obtenerResultado(Long bobinaId) {
+
+    Bobina bobina = bobinaRepo.findById(bobinaId)
+            .orElseThrow(() -> new RuntimeException("Bobina no encontrada"));
+
+    List<ControlCalidad> registros = controlRepo.findByBobinaId(bobinaId);
+
+    if (registros.isEmpty()) {
+        throw new RuntimeException("La bobina aún no tiene controles registrados");
+    }
+
+    // Último control por fecha
+    ControlCalidad ultimo = registros.stream()
+            .max(Comparator.comparing(ControlCalidad::getFecha))
+            .orElseThrow();
+
+    // Convertir cada control en DTO
+    List<ControlResultadoDTO.ItemControlDTO> detalles = registros.stream()
+            .map(r -> new ControlResultadoDTO.ItemControlDTO(
+                    r.getParametro().getNombreParametro(),
+                    r.getValor(),
+                    r.getNotas(),
+                    r.getFecha(),
+                    r.getOperador().getNombre()
+            ))
+            .toList();
+
+    return new ControlResultadoDTO(
+            bobina.getId(),
+            ultimo.getPorcentajeAprobado(),
+            bobina.getAprobada() ? "APROBADA" : "RECHAZADA",
+            ultimo.getFecha(),
+            detalles
+    );
+}
+
 }

@@ -20,4 +20,9 @@ public class ControlCalidadController {
         boolean aprobado = service.guardarControles(req);
         return ResponseEntity.ok(aprobado ? "APROBADA" : "RECHAZADA");
     }
+
+    @GetMapping("/resultado/{bobinaId}")
+    public ResponseEntity<?> obtenerResultado(@PathVariable Long bobinaId) {
+        return ResponseEntity.ok(service.obtenerResultado(bobinaId));
+    }
 }
