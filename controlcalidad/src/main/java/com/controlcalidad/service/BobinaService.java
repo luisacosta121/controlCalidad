@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.controlcalidad.dto.CrearBobinaResponseDTO;
+import com.controlcalidad.dto.ProcesoListadoDTO;
 import com.controlcalidad.enums.SectorEnum;
 import com.controlcalidad.model.Bobina;
 import com.controlcalidad.model.Lote;
@@ -24,7 +25,7 @@ public class BobinaService {
     private final LoteRepository loteRepo;
     private final SectorRepository sectorRepo;
 
-    public Optional<CrearBobinaResponseDTO> crearBobina(Long loteId, String sectorStr) {
+    public Optional<CrearBobinaResponseDTO> crearBobina(Long loteId, String sectorStr, String maquina) {
 
         Optional<Lote> loteOpt = loteRepo.findById(loteId);
 
@@ -52,11 +53,24 @@ public class BobinaService {
                 .numeroBobina(nroBobina)
                 .lote(lote)
                 .sector(sector)
+                .maquina(maquina)
                 .build();
 
         b = bobinaRepo.save(b);
 
-        CrearBobinaResponseDTO dto = new CrearBobinaResponseDTO(b.getId(), nroBobina);
+        CrearBobinaResponseDTO dto = new CrearBobinaResponseDTO(b.getId(), nroBobina, b.getMaquina());
         return Optional.of(dto);
+    }
+
+    public List<ProcesoListadoDTO> listarProcesos() {
+        List<Bobina> bobinas = bobinaRepo.findAll();
+
+        return bobinas.stream().map(b -> new ProcesoListadoDTO(
+                b.getId(),
+                b.getSector().getSector().name(),
+                b.getMaquina(),
+                b.getLote().getNumeroLote(),
+                b.getLote().getProducto().getNombre() // o trabajo, segun tu DTO
+        )).toList();
     }
 }

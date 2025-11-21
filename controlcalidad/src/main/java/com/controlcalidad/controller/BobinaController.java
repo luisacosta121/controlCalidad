@@ -1,6 +1,7 @@
 package com.controlcalidad.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,16 @@ public class BobinaController {
 
     private final BobinaService bobinaService;
 
+    @GetMapping("/procesos")
+    public ResponseEntity<?> listarProcesos() {
+        return ResponseEntity.ok(bobinaService.listarProcesos());
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearBobina(@RequestBody CrearBobinaRequestDTO request) {
 
-        java.util.Optional<CrearBobinaResponseDTO> resultado =
-                bobinaService.crearBobina(request.getLoteId(), request.getSector());
+        java.util.Optional<CrearBobinaResponseDTO> resultado = bobinaService.crearBobina(request.getLoteId(),
+                request.getSector(), request.getMaquina());
 
         if (resultado.isEmpty()) {
             return ResponseEntity.status(404).body("Lote no encontrado");

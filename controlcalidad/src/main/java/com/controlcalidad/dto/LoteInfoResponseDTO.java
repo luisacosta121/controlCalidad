@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class LoteInfoResponseDTO {
 
+    private Long id;
     private String nombreTrabajo;
 
 }

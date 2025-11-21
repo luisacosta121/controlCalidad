@@ -27,10 +27,10 @@ public class LoteService {
         Lote lote = loteOpt.get();
 
         if(lote.getProducto() == null){
-            return Optional.of(new LoteInfoResponseDTO("Trabajo no encontrado"));
+            return Optional.of(new LoteInfoResponseDTO(lote.getId(), "Trabajo no encontrado"));
         }
         
-        return Optional.of(new LoteInfoResponseDTO(lote.getProducto().getNombre()));
+        return Optional.of(new LoteInfoResponseDTO(lote.getId(), lote.getProducto().getNombre()));
     }
 
 }

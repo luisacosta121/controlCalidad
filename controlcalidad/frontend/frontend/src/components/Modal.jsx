@@ -20,7 +20,7 @@ const Modal = ({
                 left: 0,
                 width: "100%",
                 height: "100%",
-                backgroundColor: colores.white,
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",

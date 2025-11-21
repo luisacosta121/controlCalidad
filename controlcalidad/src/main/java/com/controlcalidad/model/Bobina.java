@@ -40,6 +40,8 @@ public class Bobina {
     @JoinColumn(name = "sector_id") // Clave foránea al sector
     private Sector sector;
 
+    private String maquina;
+
     private LocalDateTime fechaProduccion;
 
     @Enumerated(EnumType.STRING)

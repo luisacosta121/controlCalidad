@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CrearBobinaResponseDTO {
-
-    private Long bobinaId;
-    private int numBobina;
+public class ProcesoListadoDTO {
+    private Long id;
+    private String sector;
     private String maquina;
-
+    private String lote;
+    private String trabajo;
 }

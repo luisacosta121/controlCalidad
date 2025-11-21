@@ -1,11 +1,12 @@
 import React from "react";
-import { fontSizes } from "../styles/fontSizes";
 
 const PrimaryButton = ({
   text,
   color,
   width,
+  height,
   textColor,
+  fontSize,
   fontWeight,
   onClick
 }) => {
@@ -15,10 +16,10 @@ const PrimaryButton = ({
       style={{
         backgroundColor: color,
         width: width,
-        height: "55px",
+        height: height,
         color: textColor,
         fontWeight: fontWeight,
-        fontSize: fontSizes.button,
+        fontSize: fontSize,
         borderRadius: "15px",
         border: "none",
         cursor: "pointer",

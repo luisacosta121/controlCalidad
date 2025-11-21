@@ -1,5 +1,7 @@
 package com.controlcalidad.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.controlcalidad.enums.SectorEnum;
@@ -14,6 +16,10 @@ public class SectorService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public List<SectorEnum> obtenerTodosLosSectores() {
+        return List.of(SectorEnum.values());
     }
 
 }

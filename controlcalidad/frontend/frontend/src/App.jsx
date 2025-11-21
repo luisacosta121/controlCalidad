@@ -1,9 +1,12 @@
 
 import './App.css'
-import SelectorSectorScreen from './pages/SelectorSectorScreen'
+import CargarProcesoModal from './components/CargarProcesoModal.jsx';
+import ProcesoListadoScreen from './pages/ProcesoListadoScreen.jsx';
+import SelectorSectorScreen from './pages/SelectorSectorScreen.jsx';
 
 function App() {
-  return <SelectorSectorScreen />;
+  //return <CargarProcesoModal show={true} onClose={() => {}} onConfirm={(datos) => {console.log(datos)}} />;
+  return <ProcesoListadoScreen />;
 }
 
 export default App
