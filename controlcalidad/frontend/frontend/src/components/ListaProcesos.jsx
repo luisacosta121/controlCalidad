@@ -3,7 +3,7 @@ import { buttonSizes } from "../styles/buttonSize";
 import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 
-const ListaProcesos = ({ procesos }) => {
+const ListaProcesos = ({ procesos, onVerDetalles }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
 
@@ -71,7 +71,7 @@ const ListaProcesos = ({ procesos }) => {
                 height="50px"
                 fontSize={fontSizes.buttonText}
                 fontWeight="regular"
-                onClick={() => console.log("Ver detalles de", p.id)}
+                onClick={() => onVerDetalles && onVerDetalles(p)}
               />
             </div>
           </div>

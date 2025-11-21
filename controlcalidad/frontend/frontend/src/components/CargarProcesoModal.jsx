@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import Modal from "../components/Modal";
 import InputField from "../components/InputField";
 import DropDownMenu from "../components/DropDownMenu";
@@ -48,7 +49,13 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
   // 🔹 Buscar lote → traer trabajo e ID real
   const handleBuscarLote = async () => {
     if (!lote.trim()) {
-      alert("Ingrese un número de lote");
+      toast("Ingrese un número de lote", {
+        icon: '⚠️',
+        style: {
+          background: '#f59e0b',
+          color: '#fff',
+        },
+      });
       return;
     }
 
@@ -56,7 +63,13 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       const res = await fetch(`http://localhost:8081/lotes/buscar/${lote}`);
 
       if (!res.ok) {
-        alert("Lote no encontrado");
+        toast("Lote no encontrado", {
+          icon: '⚠️',
+          style: {
+            background: '#f59e0b',
+            color: '#fff',
+          },
+        });
         setTrabajo("");
         setLoteId(null);
         return;
@@ -67,9 +80,8 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       setTrabajo(data.nombreTrabajo || "");
       setLoteId(data.id);
 
-    } catch (err) {
-      console.error("❌ Error buscando lote:", err);
-      alert("Error al buscar el lote");
+    } catch {
+      toast.error("Error al buscar el lote");
       setTrabajo("");
       setLoteId(null);
     }
@@ -99,17 +111,35 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
 
     // 🔹 Validación mejorada para detectar strings vacíos
     if (!loteId) {
-      alert("Debe buscar un lote antes de confirmar");
+      toast("Debe buscar un lote antes de confirmar", {
+        icon: '⚠️',
+        style: {
+          background: '#f59e0b',
+          color: '#fff',
+        },
+      });
       return;
     }
 
     if (!sector || sector === "") {
-      alert("Debe seleccionar un sector");
+      toast("Debe seleccionar un sector", {
+        icon: '⚠️',
+        style: {
+          background: '#f59e0b',
+          color: '#fff',
+        },
+      });
       return;
     }
 
     if (!maquina || maquina === "") {
-      alert("Debe seleccionar una máquina");
+      toast("Debe seleccionar una máquina", {
+        icon: '⚠️',
+        style: {
+          background: '#f59e0b',
+          color: '#fff',
+        },
+      });
       return;
     }
 
@@ -130,19 +160,17 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("❌ Error del servidor:", errorText);
-        throw new Error("Error creando la bobina");
+        throw new Error(errorText);
       }
 
       const nuevaBobina = await response.json();
-      console.log("✅ Bobina creada:", nuevaBobina);
 
       onConfirm(nuevaBobina);
       handleClose();
+      toast.success("Proceso creado correctamente");
 
-    } catch (error) {
-      console.error("❌ Error:", error);
-      alert("No se pudo crear el proceso.");
+    } catch {
+      toast.error("No se pudo crear el proceso");
     }
   };
 
@@ -186,6 +214,7 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
         <InputField
           label="LOTE"
           value={lote}
+          placeholder="Nro Lote"
           onChange={(e) => setLote(e.target.value)}
           width="200px"
           height="45px"

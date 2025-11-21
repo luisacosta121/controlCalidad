@@ -49,4 +49,6 @@ public class Bobina {
 
     private Boolean aprobada;
 
+    private Boolean finalizado;
+
 }

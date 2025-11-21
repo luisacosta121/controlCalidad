@@ -1,5 +1,7 @@
 package com.controlcalidad.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.controlcalidad.model.Bobina;
@@ -15,5 +17,7 @@ public interface BobinaRepository extends JpaRepository<Bobina, Long> {
     int countByLoteId(Long loteId); // Método para contar bobinas por lote
 
     int countByLote(Lote lote);
+    
+    List<Bobina> findByLoteId(Long loteId);
 
 }

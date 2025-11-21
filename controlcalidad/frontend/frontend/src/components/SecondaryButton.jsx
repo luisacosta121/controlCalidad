@@ -8,6 +8,7 @@ const SecondaryButton = ({
   height,
   textColor,
   fontWeight,
+  fontSize,
   onClick
 }) => {
   return (
@@ -19,7 +20,7 @@ const SecondaryButton = ({
         height: height,
         color: textColor,
         fontWeight: fontWeight,
-        fontSize: fontSizes.button,
+        fontSize: fontSize || fontSizes.button,
         borderRadius: "15px",
         border: "none",
         cursor: "default",

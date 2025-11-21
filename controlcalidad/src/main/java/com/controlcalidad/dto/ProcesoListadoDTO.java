@@ -8,6 +8,7 @@ import lombok.Data;
 public class ProcesoListadoDTO {
     private Long id;
     private String sector;
+    private Long sectorId;
     private String maquina;
     private String lote;
     private String trabajo;

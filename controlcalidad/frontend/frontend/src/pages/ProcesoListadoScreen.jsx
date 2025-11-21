@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import ListaProcesos from "../components/ListaProcesos";
 import PrimaryButton from "../components/PrimaryButton";
 import CargarProcesoModal from "../components/CargarProcesoModal";
@@ -6,7 +7,7 @@ import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 import { buttonSizes } from "../styles/buttonSize";
 
-function ProcesoListadoScreen() {
+function ProcesoListadoScreen({ onVerDetalles }) {
   const [procesos, setProcesos] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -14,7 +15,7 @@ function ProcesoListadoScreen() {
     fetch("http://localhost:8081/bobinas/procesos")
       .then(res => res.json())
       .then(setProcesos)
-      .catch(console.error);
+      .catch(() => toast.error("Error al cargar procesos"));
   };
 
   useEffect(() => {
@@ -44,7 +45,7 @@ function ProcesoListadoScreen() {
       {/* LISTA CON SCROLL (solo contenido, encabezado fijo dentro) */}
       <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
         {procesos.length > 0 ? (
-          <ListaProcesos procesos={procesos} />
+          <ListaProcesos procesos={procesos} onVerDetalles={onVerDetalles} />
         ) : (
           <p
             style={{

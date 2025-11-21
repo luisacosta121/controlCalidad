@@ -1,9 +1,11 @@
 package com.controlcalidad.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
+    @GetMapping("/activos")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosActivos() {
+        List<Usuario> usuarios = usuarioService.obtenerUsuariosActivos();
+        return ResponseEntity.ok(usuarios);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {

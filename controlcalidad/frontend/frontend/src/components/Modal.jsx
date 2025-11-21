@@ -69,21 +69,23 @@ const Modal = ({
                         }}
                     >
                         <PrimaryButton
-                            text="CONFIRMAR"
-                            color={colores.primaryBlue}
-                            textColor="white"
-                            fontWeight="semi-bold"
-                            width={buttonSizes.largeMediumButton}
-                            onClick={onConfirm}
-                        />
-
-                        <PrimaryButton
                             text="CANCELAR"
                             color={colores.primaryRed}
                             textColor="white"
                             fontWeight="semi-bold"
-                            width={buttonSizes.largeMediumButton}
+                            width={buttonSizes.mediumButton}
+                            height="55px"
                             onClick={onCancel}
+                        />
+
+                        <PrimaryButton
+                            text="CONFIRMAR"
+                            color={colores.primaryBlue}
+                            textColor="white"
+                            fontWeight="semi-bold"
+                            width={buttonSizes.mediumButton}
+                            height="55px"
+                            onClick={onConfirm}
                         />
                     </div>
                 )}
