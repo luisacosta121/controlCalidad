@@ -163,12 +163,12 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         {/* Botón volver a la izquierda */}
         <div style={{ position: "absolute", left: "40px" }}>
           <SecondaryButton
-            text="← VOLVER ATRÁS"
+            text="VOLVER ATRÁS"
             color={colores.gray}
             textColor={colores.black}
-            width="180px"
-            height="45px"
-            fontWeight="600"
+            width={buttonSizes.mediumButton}
+            height="55px"
+            fontWeight="bold"
             fontSize="1rem"
             onClick={handleVolverAtras}
           />
@@ -194,8 +194,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
             display: "grid",
             gridTemplateColumns: "1fr 1.5fr 1.5fr 5fr",
             padding: "12px 40px",
-            backgroundColor: colores.lightGray,
-            borderTop: `1px solid ${colores.black}`,
+            backgroundColor: colores.white,
             borderBottom: `1px solid ${colores.black}`,
             fontSize: fontSizes.dropDownText,
             fontWeight: "regular",
@@ -213,9 +212,12 @@ function ControlesScreen({ proceso, onVolverAtras }) {
             display: "grid",
             gridTemplateColumns: "1fr 1.5fr 1.5fr 5fr",
             padding: "12px 40px",
-            backgroundColor: colores.white,
+            backgroundColor: colores.lightGray,
             borderBottom: `1px solid ${colores.black}`,
+            borderLeft: `4px solid ${colores.primaryBlue}`,
             fontSize: fontSizes.textList,
+            fontWeight: "600",
+            boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
           }}
         >
           <span>{procesoInfo.sector}</span>
@@ -234,7 +236,19 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           flexDirection: "column",
         }}
       >
-        <TablaControles bobinas={bobinas} parametros={parametros} onEstadoChange={handleEstadoChange} />
+        {bobinas.length > 0 ? (
+          <TablaControles bobinas={bobinas} parametros={parametros} onEstadoChange={handleEstadoChange} />
+        ) : (
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "80px",
+              fontSize: fontSizes.modalTitle,
+            }}
+          >
+            Aún no ha cargado ningún control
+          </p>
+        )}
       </div>
 
       {/* BOTONES FIJOS ABAJO */}
@@ -252,7 +266,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           textColor="white"
           width={buttonSizes.mediumButton}
           height="55px" 
-          fontWeight="600"
+          fontWeight="bold"
           onClick={handleFinalizarTrabajo}
         />
 
@@ -262,7 +276,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           textColor="white"
           width={buttonSizes.mediumButton}
                     height="55px"
-          fontWeight="600"
+          fontWeight="bold"
           onClick={handleCargarBobina}
         />
       </div>

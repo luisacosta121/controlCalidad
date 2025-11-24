@@ -21,20 +21,20 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Crear sectores
-        Sector extrusion = sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build());
-        Sector impresion = sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build());
-        Sector confeccion = sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build());
-        Sector refilado = sectorRepo.save(Sector.builder().sector(SectorEnum.REFILADO).build());
+        // Crear sectores solo si no existen
+        Sector extrusion = sectorRepo.findBySector(SectorEnum.EXTRUSION)
+                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build()));
+        Sector impresion = sectorRepo.findBySector(SectorEnum.IMPRESION)
+                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build()));
+        Sector confeccion = sectorRepo.findBySector(SectorEnum.CONFECCION)
+                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build()));
+        Sector refilado = sectorRepo.findBySector(SectorEnum.REFILADO)
+                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.REFILADO).build()));
 
         // ===========================
         // EXTRUSION
         // ===========================
-        parametroRepo.save(ParametroCalidad.builder()
-                .sector(extrusion)
-                .nombreParametro("ancho")
-                .orden(1)
-                .build());
+        crearParametroSiNoExiste(extrusion, "ancho", 1);
         parametroRepo.save(ParametroCalidad.builder()
                 .sector(extrusion)
                 .nombreParametro("espesor")
@@ -49,6 +49,21 @@ public class DataLoader implements CommandLineRunner {
                 .sector(extrusion)
                 .nombreParametro("tubo")
                 .orden(4)
+                .build());
+        parametroRepo.save(ParametroCalidad.builder()
+                .sector(extrusion)
+                .nombreParametro("contraccion")
+                .orden(5)
+                .build());
+        parametroRepo.save(ParametroCalidad.builder()
+                .sector(extrusion)
+                .nombreParametro("brillo")
+                .orden(6)
+                .build());
+        parametroRepo.save(ParametroCalidad.builder()
+                .sector(extrusion)
+                .nombreParametro("textura")
+                .orden(7)
                 .build());
 
         // ===========================

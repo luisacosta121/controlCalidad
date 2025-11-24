@@ -43,6 +43,9 @@ const ListaProcesos = ({ procesos, onVerDetalles }) => {
               alignItems: "center",
               color: colores.black,
               fontSize: fontSizes.textList,
+              borderLeft: `4px solid ${colores.primaryBlue}`,
+              fontWeight: "600",
+              boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
             }}
           >
             <span>{p.sector}</span>
@@ -62,7 +65,7 @@ const ListaProcesos = ({ procesos, onVerDetalles }) => {
             </span>
 
             {/* BOTÓN DETALLES */}
-            <div style={{ display: "flex", justifyContent: "center", paddingRight: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "center", paddingRight: "20px", marginLeft: "10px" }}>
               <PrimaryButton
                 text="VER DETALLES"
                 color={colores.primaryOrange}
@@ -70,7 +73,7 @@ const ListaProcesos = ({ procesos, onVerDetalles }) => {
                 width={buttonSizes.mediumButton}
                 height="50px"
                 fontSize={fontSizes.buttonText}
-                fontWeight="regular"
+                fontWeight="bold"
                 onClick={() => onVerDetalles && onVerDetalles(p)}
               />
             </div>

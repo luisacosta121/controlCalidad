@@ -51,7 +51,7 @@ function ProcesoListadoScreen({ onVerDetalles }) {
             style={{
               textAlign: "center",
               marginTop: "80px",
-              fontSize: fontSizes.body,
+              fontSize: fontSizes.modalTitle,
             }}
           >
             Aún no ha cargado ningún proceso para controlar!
@@ -73,7 +73,7 @@ function ProcesoListadoScreen({ onVerDetalles }) {
           textColor="white"
           width={buttonSizes.mediumButton}
           height="55px"
-          fontWeight="600"
+          fontWeight="bold"
           onClick={() => setShowModal(true)}
         />
       </div>

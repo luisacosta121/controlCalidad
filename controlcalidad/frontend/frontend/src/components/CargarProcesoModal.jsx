@@ -227,6 +227,7 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
           width={buttonSizes.mediumButton}
           height="45px"
           textColor="white"
+          fontWeight="bold"
           onClick={handleBuscarLote}
         />
       </div>

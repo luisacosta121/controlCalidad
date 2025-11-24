@@ -54,7 +54,12 @@ const Modal = ({
                 <hr />
 
                 {/* CONTENIDO DEL MODAL */}
-                <div style={{ marginTop: "15px", marginBottom: "25px" }}>{children}</div>
+                <div style={{ 
+                    marginTop: "15px", 
+                    marginBottom: "25px",
+                    maxHeight: "400px",
+                    overflowY: "auto"
+                }}>{children}</div>
 
                 <hr />
 
@@ -72,7 +77,7 @@ const Modal = ({
                             text="CANCELAR"
                             color={colores.primaryRed}
                             textColor="white"
-                            fontWeight="semi-bold"
+                            fontWeight="bold"
                             width={buttonSizes.mediumButton}
                             height="55px"
                             onClick={onCancel}
@@ -82,7 +87,7 @@ const Modal = ({
                             text="CONFIRMAR"
                             color={colores.primaryBlue}
                             textColor="white"
-                            fontWeight="semi-bold"
+                            fontWeight="bold"
                             width={buttonSizes.mediumButton}
                             height="55px"
                             onClick={onConfirm}
