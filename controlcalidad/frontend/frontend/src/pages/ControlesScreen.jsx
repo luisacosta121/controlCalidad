@@ -156,12 +156,12 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           alignItems: "center",
           justifyContent: "center",
           position: "relative",
-          padding: "20px 40px 20px 40px",
+          padding: "20px 20px 20px 20px",
           flexShrink: 0,
         }}
       >
         {/* Botón volver a la izquierda */}
-        <div style={{ position: "absolute", left: "40px" }}>
+        <div style={{ position: "absolute", left: "20px" }}>
           <SecondaryButton
             text="VOLVER ATRÁS"
             color={colores.gray}
@@ -187,13 +187,13 @@ function ControlesScreen({ proceso, onVolverAtras }) {
       </div>
 
       {/* INFORMACIÓN DEL PROCESO - 2 FILAS */}
-      <div style={{ flexShrink: 0 }}>
+      <div style={{ flexShrink: 0, padding: "0 20px" }}>
         {/* Primera fila - Encabezados */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1.5fr 1.5fr 5fr",
-            padding: "12px 40px",
+            padding: "12px 0px",
             backgroundColor: colores.white,
             borderBottom: `1px solid ${colores.black}`,
             fontSize: fontSizes.dropDownText,
@@ -211,7 +211,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1.5fr 1.5fr 5fr",
-            padding: "12px 40px",
+            padding: "12px 0px",
             backgroundColor: colores.lightGray,
             borderBottom: `1px solid ${colores.black}`,
             borderLeft: `4px solid ${colores.primaryBlue}`,
@@ -234,6 +234,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
+          padding: "0 20px",
         }}
       >
         {bobinas.length > 0 ? (
@@ -256,7 +257,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          padding: "20px 40px",
+          padding: "20px 20px",
           flexShrink: 0,
         }}
       >

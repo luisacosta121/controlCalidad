@@ -43,7 +43,7 @@ function ProcesoListadoScreen({ onVerDetalles }) {
       </h1>
 
       {/* LISTA CON SCROLL (solo contenido, encabezado fijo dentro) */}
-      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", padding: "0 20px" }}>
         {procesos.length > 0 ? (
           <ListaProcesos procesos={procesos} onVerDetalles={onVerDetalles} />
         ) : (

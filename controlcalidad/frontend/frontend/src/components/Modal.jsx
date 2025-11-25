@@ -11,7 +11,10 @@ const Modal = ({
     onCancel,
     showButtons = true,
     width,
+    show = true,
 }) => {
+    if (!show) return null;
+    
     return (
         <div
             style={{

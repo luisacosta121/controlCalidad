@@ -13,7 +13,7 @@ const ListaProcesos = ({ procesos, onVerDetalles }) => {
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr 5fr 1fr",
           color: colores.black,
-          paddingBottom: "10px",
+          padding: "0 20px 10px 20px",
           borderBottom: `1px solid ${colores.black}`,
           fontSize: fontSizes.dropDownText,
           backgroundColor: colores.white,
@@ -38,7 +38,7 @@ const ListaProcesos = ({ procesos, onVerDetalles }) => {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr 5fr 1fr",
-              padding: "10px 0",
+              padding: "10px 20px",
               backgroundColor: index % 2 === 0 ? colores.secondaryGray : colores.white,
               alignItems: "center",
               color: colores.black,

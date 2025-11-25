@@ -26,7 +26,9 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
       fetch("http://localhost:8081/usuarios/activos")
         .then(res => res.json())
         .then(data => {
-          setUsuarios(data);
+          // Filtrar solo usuarios con rol OPERADOR
+          const operadores = data.filter(u => u.rol === "OPERADOR");
+          setUsuarios(operadores);
         })
         .catch(() => toast.error("Error cargando usuarios"));
     }

@@ -17,7 +17,7 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
               display: "grid",
               gridTemplateColumns: gridTemplate,
               color: colores.black,
-              padding: "15px 40px",
+              padding: "15px 20px",
               borderBottom: `2px solid ${colores.black}`,
               fontSize: fontSizes.button,
               fontWeight: "regular",
@@ -45,7 +45,7 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
               style={{
                 display: "grid",
                 gridTemplateColumns: gridTemplate,
-                padding: "15px 40px",
+                padding: "15px 20px",
                 backgroundColor: index % 2 === 0 ? colores.secondaryGray : colores.white,
                 alignItems: "center",
                 color: colores.black,
