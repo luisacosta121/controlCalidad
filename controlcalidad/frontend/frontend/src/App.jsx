@@ -2,12 +2,25 @@
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import './App.css'
+import LoginScreen from './pages/LoginScreen.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ControlesScreen from './pages/ControlesScreen.jsx';
 import ProcesoListadoScreen from './pages/ProcesoListadoScreen.jsx';
 
 function App() {
+  const [usuario, setUsuario] = useState(null); // null cuando no está logueado
   const [currentScreen, setCurrentScreen] = useState('listado'); // 'listado' o 'controles'
   const [selectedProceso, setSelectedProceso] = useState(null);
+
+  const handleLogin = (user) => {
+    setUsuario(user);
+  };
+
+  const handleCerrarSesion = () => {
+    setUsuario(null);
+    setCurrentScreen('listado');
+    setSelectedProceso(null);
+  };
 
   const handleVerDetalles = (proceso) => {
     setSelectedProceso(proceso);
@@ -40,13 +53,13 @@ function App() {
           error: {
             duration: 5000,
             style: {
-              background: '#9b0404ff',
+              background: '#ef4444',
             },
           },
           warning: {
             duration: 4000,
             style: {
-              background: '#4f370dff',
+              background: '#fab236ff',
             },
           },
         }}
@@ -54,7 +67,11 @@ function App() {
           zIndex: 9999,
         }}
       />
-      {currentScreen === 'controles' ? (
+      {!usuario ? (
+        <LoginScreen onLogin={handleLogin} />
+      ) : usuario.rol === 'ADMIN' ? (
+        <AdminDashboard onCerrarSesion={handleCerrarSesion} />
+      ) : currentScreen === 'controles' ? (
         <ControlesScreen proceso={selectedProceso} onVolverAtras={handleVolverAtras} />
       ) : (
         <ProcesoListadoScreen onVerDetalles={handleVerDetalles} />

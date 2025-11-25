@@ -2,11 +2,14 @@ package com.controlcalidad.config;
 
 import org.springframework.stereotype.Component;
 
+import com.controlcalidad.enums.RolUsuario;
 import com.controlcalidad.enums.SectorEnum;
 import com.controlcalidad.model.ParametroCalidad;
 import com.controlcalidad.model.Sector;
+import com.controlcalidad.model.Usuario;
 import com.controlcalidad.repository.ParametroCalidadRepository;
 import com.controlcalidad.repository.SectorRepository;
+import com.controlcalidad.repository.UsuarioRepository;
 
 import org.springframework.boot.CommandLineRunner;
 
@@ -18,9 +21,20 @@ public class DataLoader implements CommandLineRunner {
 
     private final SectorRepository sectorRepo;
     private final ParametroCalidadRepository parametroRepo;
+    private final UsuarioRepository usuarioRepo;
 
     @Override
     public void run(String... args) throws Exception {
+        // Crear usuario administrador
+        usuarioRepo.save(Usuario.builder()
+                .usuario("admin")
+                .nombre("Administrador")
+                .apellido("Sistema")
+                .passwordHash("admin123")
+                .rol(RolUsuario.ADMIN)
+                .activo(true)
+                .build());
+
         // Crear sectores
         Sector extrusion = sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build());
         Sector impresion = sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build());
