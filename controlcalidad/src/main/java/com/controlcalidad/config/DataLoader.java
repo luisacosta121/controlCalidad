@@ -21,20 +21,20 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Crear sectores solo si no existen
-        Sector extrusion = sectorRepo.findBySector(SectorEnum.EXTRUSION)
-                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build()));
-        Sector impresion = sectorRepo.findBySector(SectorEnum.IMPRESION)
-                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build()));
-        Sector confeccion = sectorRepo.findBySector(SectorEnum.CONFECCION)
-                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build()));
-        Sector refilado = sectorRepo.findBySector(SectorEnum.REFILADO)
-                .orElseGet(() -> sectorRepo.save(Sector.builder().sector(SectorEnum.REFILADO).build()));
+        // Crear sectores
+        Sector extrusion = sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build());
+        Sector impresion = sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build());
+        Sector confeccion = sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build());
+        Sector refilado = sectorRepo.save(Sector.builder().sector(SectorEnum.REFILADO).build());
 
         // ===========================
         // EXTRUSION
         // ===========================
-        crearParametroSiNoExiste(extrusion, "ancho", 1);
+        parametroRepo.save(ParametroCalidad.builder()
+                .sector(extrusion)
+                .nombreParametro("ancho")
+                .orden(1)
+                .build());
         parametroRepo.save(ParametroCalidad.builder()
                 .sector(extrusion)
                 .nombreParametro("espesor")

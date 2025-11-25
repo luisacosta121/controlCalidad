@@ -69,11 +69,7 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
                 REGULAR: colores.primaryYellow,
                 MAL: colores.primaryRed,
               };
-              const anchos = {
-                BIEN: buttonSizes.smallButton,
-                REGULAR: buttonSizes.smallButton,
-                MAL: buttonSizes.smallButton,
-              };
+
 
               return (
                 <div key={param.id} style={{ display: "flex", justifyContent: "center" }}>
