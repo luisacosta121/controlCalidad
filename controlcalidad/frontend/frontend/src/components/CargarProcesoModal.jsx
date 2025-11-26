@@ -8,86 +8,87 @@ import { buttonSizes } from "../styles/buttonSize";
 import { fontSizes } from "../styles/fontSizes";
 import colores from "../styles/colores";
 
+const MAX_LENGTH_LOTE = 7; // NUMERO MÁXIMO DE CARACTERES PARA EL LOTE
+//-----------------------------------------------------
+/*
+MODAL PARA CREAR PROCESOS CON LOTE, SECTOR y MAQUINA
+SE USA EN LA PANTALLA PRINCIPAL DE OPERADORES
+*/
 const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
+  const [lote, setLote] = useState(""); // Número de lote ingresado
+  const [loteId, setLoteId] = useState(null); // ID real del lote
+  const [trabajo, setTrabajo] = useState(""); // Nombre del trabajo asociado al lote
+  const [sector, setSector] = useState(""); // Sector seleccionado
+  const [maquina, setMaquina] = useState(""); // Número máquina seleccionada
+  const [sectores, setSectores] = useState([]); // Lista de sectores disponibles
+  const [maquinas, setMaquinas] = useState([]); // Lista de máquinas disponibles para el sector seleccionado
 
-  const [lote, setLote] = useState("");
-  const [loteId, setLoteId] = useState(null);
-  const [trabajo, setTrabajo] = useState("");
-
-  const [sector, setSector] = useState("");
-  const [maquina, setMaquina] = useState("");
-
-  const [sectores, setSectores] = useState([]);
-  const [maquinas, setMaquinas] = useState([]);
-
-  // 🔹 Cargar sectores cuando se abre
+  //-----------------------------------------------------
+  // CARGA DE SECTORES
   useEffect(() => {
     if (!show) return;
-
     fetch("http://localhost:8081/sectores")
       .then(r => r.json())
       .then(setSectores)
       .catch(() => setSectores([]));
-
   }, [show]);
 
-  // 🔹 Cargar máquinas cuando cambia el sector
-   useEffect(() => {
+  //-----------------------------------------------------
+  // CARGA DE MÁQUINAS (SE EJECUTA CUANDO CAMBIA EL SECTOR)
+  useEffect(() => {
     if (!sector) {
-      setMaquinas([]); // 🔹 Limpiar máquinas si no hay sector
-      setMaquina(""); // 🔹 Resetear máquina seleccionada
+      setMaquinas([]); // LIMPIA MÁQUINAS SI NO HAY SECTOR
+      setMaquina(""); // RESETEA MÁQUINA SELECCIONADA
       return;
     }
-
     fetch(`http://localhost:8081/maquinas/${sector}`)
       .then(r => r.json())
       .then(setMaquinas)
       .catch(() => setMaquinas([]));
-
   }, [sector]);
 
-  // 🔹 Buscar lote → traer trabajo e ID real
+  //-----------------------------------------------------
+  // BUSCAR LOTE Y TRAE EL TRABAJO ASOCIADO
   const handleBuscarLote = async () => {
     if (!lote.trim()) {
-      toast("Ingrese un número de lote", {
-        icon: '⚠️',
+      toast("INGRESE NUMERO DE LOTE", {
         style: {
-          background: '#f59e0b',
-          color: '#fff',
+          background: colores.warningToast,
+          color: colores.white,
+          fontSize: fontSizes.body
         },
       });
       return;
     }
-
     try {
+      // VALIDA QUE EL LOTE EXISTA, SI NO MUESTRA TOAST
       const res = await fetch(`http://localhost:8081/lotes/buscar/${lote}`);
-
       if (!res.ok) {
-        toast("Lote no encontrado", {
-          icon: '⚠️',
+        toast("LOTE NO ENCONTRADO", {
           style: {
-            background: '#f59e0b',
-            color: '#fff',
+            background: colores.warningToast,
+            color: colores.white,
+            fontSize: fontSizes.body
           },
         });
-        setTrabajo("");
-        setLoteId(null);
+        setTrabajo(""); // LIMPIA TRABAJO SI NO ENCUENTRA LOTE
+        setLoteId(null); // LIMPIA LOTE ID
         return;
       }
-
+      // SI EL LOTE EXISTE, SETEA EL TRABAJO Y LOTE ID
       const data = await res.json();
-      console.log("📦 Lote encontrado:", data);
+      console.log("Lote encontrado:", data);
       setTrabajo(data.nombreTrabajo || "");
       setLoteId(data.id);
-
     } catch {
-      toast.error("Error al buscar el lote");
+      toast.error("ERROR AL BUSCAR LOTE");
       setTrabajo("");
       setLoteId(null);
     }
   };
 
-  // 🔹 Cerrar modal y resetear campos
+  //-----------------------------------------------------
+  // CERRAR MODAL Y RESETEAR CAMPOS
   const handleClose = () => {
     setLote("");
     setLoteId(null);
@@ -97,52 +98,53 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
     onClose();
   };
 
-  // 🔹 Crear bobina desde el modal
+  //-----------------------------------------------------
+  // CREAR PROCESO DESDE EL MODAL
   const handleConfirm = async () => {
 
-    // 🔹 DEBUG: Ver qué valores tiene antes de validar
-    console.log("📊 Valores antes de confirmar:", { 
-      loteId, 
-      sector, 
+    console.log("Valores antes de confirmar:", {
+      loteId,
+      sector,
       maquina,
       sectorTipo: typeof sector,
       maquinaTipo: typeof maquina
     });
 
-    // 🔹 Validación mejorada para detectar strings vacíos
+    // VALIDACIÓN MEJORADA PARA DETECTAR STRINGS VACÍOS
     if (!loteId) {
-      toast("Debe buscar un lote antes de confirmar", {
-        icon: '⚠️',
+      toast("DEBE BUSCAR UN LOTE ANTES DE CONFIRMAR", {
         style: {
-          background: '#f59e0b',
-          color: '#fff',
+          background: colores.warningToast,
+          color: colores.white,
+          fontSize: fontSizes.body
         },
       });
       return;
     }
-
+    // VALIDAR SECTOR
     if (!sector || sector === "") {
-      toast("Debe seleccionar un sector", {
-        icon: '⚠️',
+      toast("DEBE SELECCIONAR UN SECTOR", {
         style: {
-          background: '#f59e0b',
-          color: '#fff',
+          background: colores.warningToast,
+          color: colores.white,
+          fontSize: fontSizes.body
         },
       });
       return;
     }
-
+    // VALIDAR MÁQUINA
     if (!maquina || maquina === "") {
-      toast("Debe seleccionar una máquina", {
-        icon: '⚠️',
+      toast("DEBE SELECCIONAR UNA MÁQUINA", {
         style: {
-          background: '#f59e0b',
-          color: '#fff',
+          background: colores.warningToast,
+          color: colores.white,
+          fontSize: fontSizes.body
         },
       });
       return;
     }
 
+    // ENVIAR PETICIÓN AL BACKEND
     try {
       const payload = {
         loteId: Number(loteId),
@@ -150,14 +152,16 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
         maquina: String(maquina)
       };
 
-      console.log("📤 Enviando:", payload);
+      console.log("Enviando:", payload);
 
+      // ENVIAR PETICIÓN AL BACKEND  - POR EJ. Body: { "loteId": 5, "sector": "EXTRUSION", "maquina": "1" }
       const response = await fetch("http://localhost:8081/bobinas/crear", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
+      // VALIDAR RESPUESTA DEL BACKEND
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText);
@@ -165,17 +169,21 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
 
       const nuevaBobina = await response.json();
 
+      // LLAMA AL ONCONFIRM PASÁNDOLE LA NUEVA BOBINA Y CIERRA EL MODAL
       onConfirm(nuevaBobina);
       handleClose();
-      toast.success("Proceso creado correctamente");
+      toast.success("PROCESO CREADO CORRECTAMENTE");
 
     } catch {
-      toast.error("No se pudo crear el proceso");
+      toast.error("NO SE PUDO CREAR EL PROCESO");
     }
   };
 
+  // ------------------------------------------------------
   if (!show) return null;
 
+  // ------------------------------------------------------
+  // Renderizado del componente
   return (
     <Modal
       title="CARGAR PROCESO"
@@ -183,50 +191,69 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       onConfirm={handleConfirm}
       onCancel={handleClose}
     >
-      {/* TRABAJO → TEXTO */}
+      {/* SEGUNDA FILA DONDE SE VE EL NOMBRE DEL TRABAJO */}
       <div style={{ marginBottom: "20px" }}>
-        <label style={{ 
-          fontSize: fontSizes.dropDownText, 
-          fontWeight: "bold", 
+        <label style={{
+          fontSize: fontSizes.dropDownText,
+          fontWeight: "bold",
           color: colores.black,
           display: "block",
           marginBottom: "8px"
         }}>
           TRABAJO
         </label>
-        <p style={{ 
-          fontSize: fontSizes.dropDownText, 
-          color: colores.black,
+        <p style={{
+          fontSize: fontSizes.button,
           margin: 0,
           padding: "10px",
-          backgroundColor: colores.lightGray,
-          borderRadius: "8px",
           minHeight: "25px"
         }}>
-          {trabajo || "Busque un lote para ver el trabajo"}
+          {trabajo || "BUSQUE UN LOTE PARA VER EL TRABAJO ASOCIADO"}
         </p>
       </div>
 
       <hr style={{ marginBottom: "20px" }} />
 
       {/* LOTE + BUSCAR */}
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "15px", marginBottom: "20px" }}>
-        <InputField
-          label="LOTE"
-          value={lote}
-          placeholder="Nro Lote"
-          onChange={(e) => setLote(e.target.value)}
-          width="200px"
-          height="45px"
-          gap="20px"
-        />
+      <div style={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "20px" }}>
+        {/* INPUT PARA LOTE */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <label style={{
+            fontSize: fontSizes.dropDownText,
+            color: colores.black,
+            fontWeight: "regular",
+            width: "180px",
+            textAlign: "right",
+          }}>
+            LOTE<span style={{ color: colores.errorToast }}> *</span>
+          </label>
+          <input
+            type="text"
+            value={lote}
+            placeholder="Nro Lote"
+            onChange={(e) => setLote(e.target.value)}
+            maxLength={MAX_LENGTH_LOTE}
+            style={{
+              width: "200px",
+              height: "45px",
+              padding: "0 12px",
+              borderRadius: "10px",
+              border: `1px solid ${colores.black}`,
+              backgroundColor: colores.white,
+              fontSize: fontSizes.dropDownText,
+              color: colores.black,
+              outline: "none",
+            }}
+          />
+        </div>
 
+        {/* BOTÓN BUSCAR */}
         <PrimaryButton
           text="BUSCAR"
           color={colores.primaryOrange}
           width={buttonSizes.mediumButton}
           height="45px"
-          textColor="white"
+          textColor={colores.white}
           fontWeight="bold"
           onClick={handleBuscarLote}
         />
@@ -235,7 +262,7 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       {/* SECTOR */}
       <div style={{ marginBottom: "20px" }}>
         <DropDownMenu
-          label="SECTOR"
+          label={<>SECTOR<span style={{ color: colores.errorToast }}> *</span></>}
           value={sector}
           height="45px"
           gap="20px"
@@ -250,7 +277,7 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       {/* MÁQUINA */}
       <div style={{ marginBottom: "20px" }}>
         <DropDownMenu
-          label="MAQUINA"
+          label={<>MÁQUINA<span style={{ color: colores.errorToast }}> *</span></>}
           value={maquina}
           height="45px"
           gap="20px"
@@ -261,7 +288,6 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
           onChange={(e) => setMaquina(e.target.value)}
         />
       </div>
-
     </Modal>
   );
 };

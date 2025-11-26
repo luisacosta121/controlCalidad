@@ -1,14 +1,14 @@
 import React from "react";
 
 const PrimaryButton = ({
-  text,
-  color,
-  width,
-  height,
-  textColor,
-  fontSize,
-  fontWeight,
-  onClick
+  text, // TEXTO DEL BOTÓN
+  color, // COLOR DE FONDO DEL BOTÓN
+  width, // ANCHO DEL BOTÓN
+  height, // ALTO DEL BOTÓN
+  textColor, // COLOR DEL TEXTO
+  fontSize, // TAMAÑO DE FUENTE
+  fontWeight, // PESO DE FUENTE
+  onClick // FUNCION AL HACER CLICK
 }) => {
   return (
     <button

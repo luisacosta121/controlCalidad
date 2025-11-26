@@ -3,16 +3,26 @@ import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 import { buttonSizes } from "../styles/buttonSize";
 
+const MAX_TRUNCATE_LENGTH = 18;
+
+//---------------------------------------
+// TABLA DE CONTROLES DE CALIDAD
 const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
-  // Calcular columnas dinámicamente: bobina + maq + ayu1 + ayu2 + parámetros
+  // AJUSTA LAS COLUMNAS DE BOB MAQ AYU1 AYU2 + PARÁMETROS DINÁMICOS
   const gridTemplate = `0.5fr 1.5fr 1.5fr 1.5fr ${parametros.map(() => "1fr").join(" ")}`;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      width: "100%"
+    }}>
       <div style={{ flex: 1, overflow: "auto" }}>
         <div style={{ minWidth: "max-content" }}>
           {/* ENCABEZADO FIJO */}
           <div
+            // ENCABEZADO CON BOB MAQ AYU1 AYU2 + PARÁMETROS DINÁMICOS
             style={{
               display: "grid",
               gridTemplateColumns: gridTemplate,
@@ -28,9 +38,10 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
             }}
           >
             <span>BOBINA</span>
-            <span>MAQ.</span>
-            <span>AYU. 1</span>
-            <span>AYU. 2</span>
+            <span>MAQUINISTA</span>
+            <span>AYUDANTE 1</span>
+            <span>AYUDANTE 2</span>
+            {/* PARÁMETROS DINÁMICOS */}
             {parametros.map((param) => (
               <span key={param.id} style={{ textAlign: "center" }}>
                 {param.nombreParametro.toUpperCase()}
@@ -38,7 +49,7 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
             ))}
           </div>
 
-          {/* FILAS */}
+          {/* FILAS RECORRE  CADA BOBINA DEL ARRAY Y GENERA UNA FILA */}
           {bobinas.map((bobina, index) => (
             <div
               key={bobina.id}
@@ -50,48 +61,59 @@ const TablaControles = ({ bobinas, parametros = [], onEstadoChange }) => {
                 alignItems: "center",
                 color: colores.black,
                 fontSize: fontSizes.textList,
-                borderBottom: `1px solid ${colores.lightGray}`,
                 borderLeft: `4px solid ${colores.primaryBlue}`,
-                fontWeight: "600",
+                fontWeight: "bold",
                 boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
-            <span style={{ fontWeight: "bold" }}>{bobina.numero}</span>
-            <span style={{ wordWrap: "break-word", overflowWrap: "break-word" }}>{bobina.maquinista}</span>
-            <span style={{ wordWrap: "break-word", overflowWrap: "break-word" }}>{bobina.ayudante1}</span>
-            <span style={{ wordWrap: "break-word", overflowWrap: "break-word" }}>{bobina.ayudante2 || "-"}</span>
+              <span>{bobina.numero}</span>
+              <span title={bobina.maquinista}>
+                {bobina.maquinista.length > MAX_TRUNCATE_LENGTH ? bobina.maquinista.substring(0, MAX_TRUNCATE_LENGTH).toUpperCase() + "..." : bobina.maquinista.toUpperCase()}
+              </span>
+              <span title={bobina.ayudante1 || "-"}>
+                {bobina.ayudante1 ? (bobina.ayudante1.length > MAX_TRUNCATE_LENGTH ? bobina.ayudante1.substring(0, MAX_TRUNCATE_LENGTH).toUpperCase() + "..." : bobina.ayudante1.toUpperCase()) : "-"}
+              </span>
+              <span title={bobina.ayudante2 || "-"}>
+                {bobina.ayudante2 ? (bobina.ayudante2.length > MAX_TRUNCATE_LENGTH ? bobina.ayudante2.substring(0, MAX_TRUNCATE_LENGTH).toUpperCase() + "..." : bobina.ayudante2.toUpperCase()) : "-"}
+              </span>
 
-            {/* BOTONES DE ESTADO DINÁMICOS */}
-            {parametros.map((param) => {
-              const estado = bobina[param.nombreParametro];
-              const coloresEstado = {
-                BIEN: colores.primaryGreen,
-                REGULAR: colores.primaryYellow,
-                MAL: colores.primaryRed,
-              };
+              {/* BOTONES DE ESTADO DINÁMICOS */}
+              {parametros.map((param) => {
+                const estado = bobina[param.nombreParametro];
+                const coloresEstado = {
+                  BIEN: colores.primaryGreen,
+                  REGULAR: colores.primaryYellow,
+                  MAL: colores.primaryRed,
+                };
 
+                return (
+                  <div key={param.id} style={{
+                    display: "flex",
+                    justifyContent: "center"
+                  }}>
+                    {estado ? (
+                      <SecondaryButton
+                        text={estado}
+                        color={coloresEstado[estado]}
+                        textColor={colores.white}
+                        width={buttonSizes.smallButton}
+                        height="40px"
+                        fontSize={fontSizes.body}
+                        fontWeight="semi-bold"
+                        onClick={() => onEstadoChange && onEstadoChange(bobina.id, param.nombreParametro, null)}
+                      />
+                    ) : (
+                      <span style={{
+                        fontSize: fontSizes.textList,
+                        color: colores.black,
+                      }}>-</span>
+                    )}
+                  </div>
+                );
+              })}
 
-              return (
-                <div key={param.id} style={{ display: "flex", justifyContent: "center" }}>
-                  {estado ? (
-                    <SecondaryButton
-                      text={estado}
-                      color={coloresEstado[estado]}
-                      textColor="white"
-                      width={buttonSizes.smallButton}
-                      height="40px"
-                      fontSize={fontSizes.body}
-                      fontWeight="bold"
-                      onClick={() => onEstadoChange && onEstadoChange(bobina.id, param.nombreParametro, null)}
-                    />
-                  ) : (
-                    <span style={{ fontSize: "1.2rem", color: "#ccc" }}>-</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>

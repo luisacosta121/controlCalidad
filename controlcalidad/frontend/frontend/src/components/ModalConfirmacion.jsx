@@ -1,5 +1,7 @@
 import Modal from "./Modal";
 
+//----------------------------------------
+// MODAL DE CONFIRMACION REUTILIZABLE
 const ModalConfirmacion = ({ show, onConfirm, onCancel, titulo, mensaje }) => {
   if (!show) return null;
 

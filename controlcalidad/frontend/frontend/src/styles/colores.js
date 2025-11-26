@@ -1,9 +1,11 @@
 const colores = {
   primaryRed: "#D31C1C",
   primaryBlue: "#1C81D3",
-  primaryGreen: "#1CD359",
+  primaryGreen: "#17ca7fff",
   primaryYellow: "#FFC107",
   primaryOrange: "#E5892D",
+  warningToast: "#FF9800",
+  errorToast: "#ff0000ff",
   primaryGray: "#D9D9D9",
   secondaryGray: "#E9E9E9",
   lightGray: "#F5F5F5",

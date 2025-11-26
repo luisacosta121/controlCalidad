@@ -3,17 +3,27 @@ import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import './App.css'
 import LoginScreen from './pages/LoginScreen.jsx';
+import AdminLoginScreen from './pages/AdminLoginScreen.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ControlesScreen from './pages/ControlesScreen.jsx';
 import ProcesoListadoScreen from './pages/ProcesoListadoScreen.jsx';
 
 function App() {
   const [usuario, setUsuario] = useState(null); // null cuando no está logueado
-  const [currentScreen, setCurrentScreen] = useState('listado'); // 'listado' o 'controles'
+  const [currentScreen, setCurrentScreen] = useState('listado'); // 'listado', 'controles', 'adminLogin'
   const [selectedProceso, setSelectedProceso] = useState(null);
 
   const handleLogin = (user) => {
     setUsuario(user);
+    setCurrentScreen('listado'); // Volver a la pantalla principal después de login
+  };
+
+  const handleAdminLogin = () => {
+    setCurrentScreen('adminLogin'); // Navegar a la pantalla de admin login
+  };
+
+  const handleVolverLogin = () => {
+    setCurrentScreen('listado'); // Volver a la selección de rol
   };
 
   const handleCerrarSesion = () => {
@@ -68,7 +78,11 @@ function App() {
         }}
       />
       {!usuario ? (
-        <LoginScreen onLogin={handleLogin} />
+        currentScreen === 'adminLogin' ? (
+          <AdminLoginScreen onLogin={handleLogin} onVolver={handleVolverLogin} />
+        ) : (
+          <LoginScreen onLogin={handleLogin} onAdminLogin={handleAdminLogin} />
+        )
       ) : usuario.rol === 'ADMIN' ? (
         <AdminDashboard onCerrarSesion={handleCerrarSesion} />
       ) : currentScreen === 'controles' ? (

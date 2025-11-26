@@ -2,20 +2,30 @@ import React from "react";
 import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 
+//------------------------------------------------
+// COMPONENTE: InputField
 const InputField = ({
-    label,
-    value,
-    onChange,
-    width,
-    height,
-    gap,
-    placeholder = "",
-    readOnly = false,   // <-- agregado
+    label, // ETIQUETA AL LADO DEL INPUT
+    value, // VALOR DEL INPUT
+    onChange, // FUNCIÓN ONCHANGE
+    width, // ANCHO DEL INPUT
+    height, // ALTURA DEL INPUT
+    gap, // ESPACIO ENTRE LABEL E INPUT
+    maxLength, // LONGITUD MÁXIMA DEL INPUT
+    placeholder = "", // TEXTO PLACEHOLDER
+    readOnly = false, // SI ES TRUE EL INPUT NO SE PUEDE EDITAR
 }) => {
-    return (
-        <div style={{ display: "flex", alignItems: "center", gap: gap, marginBottom: "10px" }}>
 
-            {/* Label */}
+    //------------------------------------------------
+    // RENDERIZADO DEL COMPONENTE
+    return (
+        <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: gap,
+            marginBottom: "10px"
+        }}>
+            {/* LABEL (TEXTO FUERA DEL INPUT) */}
             <label style={{
                 fontSize: fontSizes.dropDownText,
                 color: colores.black,
@@ -24,28 +34,29 @@ const InputField = ({
                 textAlign: "left",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
-                textOverflow: "ellipsis"
+                textOverflow: "ellipsis" // PARA TEXTO MUY LARGO AGREGA "..."
             }}>
                 {label}
             </label>
 
-            {/* Input */}
+            {/* INPUT (CAMPO DE TEXTO) */}
             <input
-                type="text"
+                type="text" // TIPO DE INPUT
                 value={value}
                 onChange={onChange}
-                placeholder={placeholder}
-                readOnly={readOnly}   // <-- agregado
+                placeholder={placeholder} // TEXTO PLACEHOLDER
+                maxLength={maxLength} // LONGITUD MÁXIMA DEL INPUT
+                readOnly={readOnly}   // SI ES TRUE EL INPUT NO SE PUEDE EDITAR
                 style={{
                     width: width,
                     height: height,
                     padding: "0 12px",
                     borderRadius: "10px",
                     border: `1px solid ${colores.black}`,
-                    backgroundColor: readOnly ? "#e6e6e6" : colores.white, // <-- agregado
+                    backgroundColor: readOnly ? colores.white : colores.white, // COLOR DE FONDO SI ES READONLY
                     fontSize: fontSizes.dropDownText,
                     color: colores.black,
-                    outline: "none",
+                    outline: "none", // QUITA EL BORDE AZUL AL HACER CLICK
                 }}
             />
         </div>

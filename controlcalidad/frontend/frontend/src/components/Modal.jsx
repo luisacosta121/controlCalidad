@@ -4,19 +4,22 @@ import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 import { buttonSizes } from "../styles/buttonSize";
 
+//---------------------------------------
+// MODAL GENERICO REUTILIZABLE
 const Modal = ({
-    title,
-    children,
-    onConfirm,
-    onCancel,
-    showButtons = true,
-    width,
-    show = true,
+    title, // TITULO DEL MODAL
+    children, // CONTENIDO DEL MODAL
+    onConfirm, // FUNCION AL CONFIRMAR
+    onCancel, // FUNCION AL CANCELAR
+    showButtons = true, // MOSTRAR BOTONES DE CONFIRMAR Y CANCELAR
+    width, // ANCHO DEL MODAL
+    show = true, // MOSTRAR MODAL
 }) => {
     if (!show) return null;
-    
+
     return (
         <div
+            // FONDO MAS OSCURO DETRAS AL MOSTRAR EL MODAL
             style={{
                 position: "fixed",
                 top: 0,
@@ -30,14 +33,14 @@ const Modal = ({
                 zIndex: 999,
             }}
         >
-            {/* CONTENEDOR DEL MODAL */}
+            {/* CONTENEDOR DEL MODAL (RECUADRO GRANDE PRINCIPAL) */}
             <div
                 style={{
                     backgroundColor: colores.white,
                     borderRadius: "25px",
                     width: width,
                     padding: "20px",
-                    boxShadow: "0px 4px 20px rgba(0,0,0,0.25)",
+                    boxShadow: "0px 4px 20px rgba(0,0,0,0.5)",
                 }}
             >
                 {/* TITULO DEL MODAL */}
@@ -47,22 +50,25 @@ const Modal = ({
                         fontSize: fontSizes.modalTitle,
                         fontWeight: "bold",
                         marginTop: "0px",
-                        marginBottom: "5px",
+                        marginBottom: "10px",
                         color: colores.black,
                     }}
                 >
                     {title}
                 </h2>
 
+                {/* LINEA QUE SEPARA EL TITULO DEL CONTENIDO */}
                 <hr />
 
                 {/* CONTENIDO DEL MODAL */}
-                <div style={{ 
-                    marginTop: "15px", 
+                <div style={{
+                    marginTop: "15px",
                     marginBottom: "25px",
                     maxHeight: "400px",
                     overflowY: "auto"
-                }}>{children}</div>
+                }}>
+                    {children}
+                </div>
 
                 <hr />
 

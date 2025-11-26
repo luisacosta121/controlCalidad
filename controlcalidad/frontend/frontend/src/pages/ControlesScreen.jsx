@@ -9,30 +9,27 @@ import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 import { buttonSizes } from "../styles/buttonSize";
 
+//-------------------------------------------------
+// PANTALLA QUE PERMITE CONTROLAR LAS BOBINAS DE UN LOTE EN UN PROCESO
+
 function ControlesScreen({ proceso, onVolverAtras }) {
   const [bobinas, setBobinas] = useState([]);
   const [parametros, setParametros] = useState([]);
-
-  // Información del proceso
   const [procesoInfo] = useState(proceso);
-
-  // Estado del modal de cargar bobina
   const [showCargarBobina, setShowCargarBobina] = useState(false);
-  
-  // Estado del modal de finalizar trabajo
   const [showFinalizarModal, setShowFinalizarModal] = useState(false);
 
-  // Cargar parámetros del sector
+  // CARGAR PARAMÉTROS DEL SECTOR CUANDO CAMBIA EL PROCESO
   useEffect(() => {
     if (proceso?.sectorId) {
       fetch(`http://localhost:8081/parametros/sector/${proceso.sectorId}`)
         .then(res => res.json())
         .then(data => setParametros(data))
-        .catch(() => toast.error("Error cargando parámetros"));
+        .catch(() => toast.error("ERROR CARGANDO PARAMETROS"));
     }
   }, [proceso]);
 
-  // Cargar bobinas existentes cuando se monta el componente
+  // CARGA LAS BOBINAS EXISTENTES CUANDO CAMBIA EL PROCESO
   useEffect(() => {
     if (proceso?.id) {
       fetch(`http://localhost:8081/bobinas/proceso/${proceso.id}/controles`)
@@ -41,14 +38,15 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           // Transformar los datos para que los controles sean propiedades directas
           const bobinasTransformadas = data.map(bobina => ({
             ...bobina,
-            ...bobina.controles, // Spread de los controles dinámicos
+            ...bobina.controles, // SPREAD DE LOS CONTROLES DINÁMICOS
           }));
           setBobinas(bobinasTransformadas);
         })
-        .catch(() => toast.error("Error cargando bobinas"));
+        .catch(() => toast.error("ERROR CARGANDO BOBINAS"));
     }
   }, [proceso]);
 
+  // MANEJADORES DE EVENTOS
   const handleEstadoChange = (bobinaId, control, estado) => {
     setBobinas((prev) =>
       prev.map((bobina) =>
@@ -57,16 +55,19 @@ function ControlesScreen({ proceso, onVolverAtras }) {
     );
   };
 
+  // EJECUTA LA ACCIÓN DE VOLVER ATRÁS
   const handleVolverAtras = () => {
     if (onVolverAtras) {
       onVolverAtras();
     }
   };
 
+  // ABRE EL MODAL DE FINALIZAR TRABAJO
   const handleFinalizarTrabajo = () => {
     setShowFinalizarModal(true);
   };
 
+  // CONFIRMA LA FINALIZACIÓN DEL TRABAJO
   const handleConfirmFinalizarTrabajo = async () => {
     try {
       const response = await fetch(`http://localhost:8081/bobinas/finalizar/${proceso.id}`, {
@@ -78,7 +79,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
       }
 
       setShowFinalizarModal(false);
-      toast.success("Trabajo finalizado correctamente");
+      toast.success("TRABAJO FINALIZADO CORRECTAMENTE");
       // Volver a la pantalla de listado de procesos
       if (onVolverAtras) {
         onVolverAtras();
@@ -88,19 +89,21 @@ function ControlesScreen({ proceso, onVolverAtras }) {
     }
   };
 
+  // ABRE EL MODAL DE CARGAR BOBINA
   const handleCargarBobina = () => {
     setShowCargarBobina(true);
   };
 
+  // CONFIRMA LA CARGA DE UNA NUEVA BOBINA
   const handleConfirmCargarBobina = async (bobina) => {
     try {
-      // Construir mapa de controles con parámetros dinámicos
+      // CONSTRUYER MAPA DE CONTROLES CON PARÁMETROS DINÁMICOS
       const controles = {};
       parametros.forEach(param => {
         controles[param.nombreParametro] = bobina[param.nombreParametro];
       });
 
-      // Construir objeto de request
+      // CONSTRUYE OBJETO DE REQUEST
       const requestBody = {
         procesoId: procesoInfo.id || proceso?.id,
         operadorId: bobina.operadorId,
@@ -109,7 +112,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         controles: controles,
       };
 
-      // Enviar al backend
+      // ENVIAR PETICIÓN AL BACKEND
       const response = await fetch("http://localhost:8081/bobinas/crear-con-controles", {
         method: "POST",
         headers: {
@@ -124,8 +127,8 @@ function ControlesScreen({ proceso, onVolverAtras }) {
       }
 
       const nuevaBobina = await response.json();
-      
-      // Agregar a la lista con los nombres para mostrar
+
+      // AGREGAR LA NUEVA BOBINA A LA LISTA CON LOS CONTROLES
       const bobinaConDatos = {
         id: nuevaBobina.id,
         numero: nuevaBobina.numero,
@@ -136,16 +139,18 @@ function ControlesScreen({ proceso, onVolverAtras }) {
       };
 
       setBobinas([...bobinas, bobinaConDatos]);
-      toast.success(`Bobina #${nuevaBobina.numero} cargada correctamente`);
+      toast.success(`BOBINA #${nuevaBobina.numero} CARGADA CORRECTAMENTE`);
     } catch (error) {
-      toast.error(`Error al guardar la bobina: ${error.message}`);
+      toast.error(`ERROR AL GUARDAR LA BOBINA: ${error.message}`);
     }
   };
 
+  //--------------------------------------------------------
+  // RENDERIZADO DE LA PANTALLA
   return (
-    <div style={{ 
-      display: "flex", 
-      flexDirection: "column", 
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
       height: "100vh",
       width: "100%"
     }}>
@@ -160,21 +165,21 @@ function ControlesScreen({ proceso, onVolverAtras }) {
           flexShrink: 0,
         }}
       >
-        {/* Botón volver a la izquierda */}
+        {/* BOTON DE VOLVER */}
         <div style={{ position: "absolute", left: "20px" }}>
-          <SecondaryButton
+          <PrimaryButton
             text="VOLVER ATRÁS"
-            color={colores.gray}
+            color={colores.primaryGray}
             textColor={colores.black}
             width={buttonSizes.mediumButton}
             height="55px"
             fontWeight="bold"
-            fontSize="1rem"
+            fontSize={fontSizes.body}
             onClick={handleVolverAtras}
           />
         </div>
 
-        {/* Título centrado */}
+        {/* TITULO CENTRADO ARRIBA */}
         <h1
           style={{
             fontSize: fontSizes.modalTitle,
@@ -247,7 +252,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
               fontSize: fontSizes.modalTitle,
             }}
           >
-            Aún no ha cargado ningún control
+            AÚN NO HA CARGADO NINGÚN CONTROL
           </p>
         )}
       </div>
@@ -264,9 +269,9 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         <PrimaryButton
           text="FINALIZAR TRABAJO"
           color={colores.primaryRed}
-          textColor="white"
+          textColor={colores.white}
           width={buttonSizes.mediumButton}
-          height="55px" 
+          height="55px"
           fontWeight="bold"
           onClick={handleFinalizarTrabajo}
         />
@@ -274,15 +279,15 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         <PrimaryButton
           text="CARGAR BOBINA"
           color={colores.primaryBlue}
-          textColor="white"
+          textColor={colores.white}
           width={buttonSizes.mediumButton}
-                    height="55px"
+          height="55px"
           fontWeight="bold"
           onClick={handleCargarBobina}
         />
       </div>
 
-      {/* Modal Cargar Bobina */}
+      {/* MODAL DE CARGAR BOBINA */}
       <CargarBobinaModal
         show={showCargarBobina}
         onClose={() => setShowCargarBobina(false)}
@@ -291,7 +296,7 @@ function ControlesScreen({ proceso, onVolverAtras }) {
         proceso={proceso}
       />
 
-      {/* Modal Finalizar Trabajo */}
+      {/* MODAL DE FINALIZAR TRABAJO */}
       <ModalConfirmacion
         show={showFinalizarModal}
         titulo="FINALIZAR TRABAJO"

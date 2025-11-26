@@ -2,14 +2,14 @@ import React from "react";
 import { fontSizes } from "../styles/fontSizes";
 
 const SecondaryButton = ({
-  text,
-  color,
-  width,
-  height,
-  textColor,
-  fontWeight,
-  fontSize,
-  onClick
+  text, // TEXTO DEL BOTÓN
+  color, // COLOR DE FONDO DEL BOTÓN
+  width, // ANCHO DEL BOTÓN
+  height, // ALTO DEL BOTÓN
+  textColor, // COLOR DEL TEXTO
+  fontWeight, // PESO DE FUENTE
+  fontSize, // TAMAÑO DE FUENTE
+  onClick // FUNCION AL HACER CLICK
 }) => {
   return (
     <button

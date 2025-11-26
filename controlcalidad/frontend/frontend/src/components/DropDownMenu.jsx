@@ -2,20 +2,27 @@ import React from "react";
 import colores from "../styles/colores";
 import { fontSizes } from "../styles/fontSizes";
 
+const MAX_TRUNCATE_LENGTH = 12; // MÁXIMO DE CARACTERES ANTES DE TRUNCAR
+
+//------------------------------------------------
+// COMPONENTE: DropDownMenu
 const DropDownMenu = ({
-  label,
-  value,
+  label, // ETIQUETA AL LADO DEL SELECT
+  value, // VALOR SELECCIONADO
   onChange,
-  height,
-  gap,
-  width = "200px",
-  options = [],
+  height, // ALTURA DEL SELECT
+  gap, // ESPACIO ENTRE LABEL Y SELECT
+  width = "200px", // ANCHO DEL SELECT
+  options = [], // OPCIONES DEL SELECT
 }) => {
 
+  //------------------------------------------------
+  // FUNCION TRUNCATE PARA ACORTAR TEXTOS LARGOS
   const truncateText = (text) =>
-    text.length > 12 ? text.substring(0, 12) + " ..." : text;
+    text.length > MAX_TRUNCATE_LENGTH ? text.substring(0, MAX_TRUNCATE_LENGTH) + " ..." : text;
 
-  // 🔥 Compatible con strings, números y objetos de la BD
+  //------------------------------------------------
+  // FUNCION PARA CONVERTIR DIFERENTES FORMATOS DE OPCIONES A UN FORMATO UNIFORME
   const parseOption = (opt) => {
     if (typeof opt === "string") {
       return { value: opt, label: opt };
@@ -35,12 +42,15 @@ const DropDownMenu = ({
     return { value: "", label: "" };
   };
 
-  // Evitar crash si options no es array
+  //------------------------------------------------
+  // VERIFICAR QUE OPTIONS SEA UN ARRAY
   if (!Array.isArray(options)) {
     console.warn("DropDownMenu: options NO ES ARRAY:", options);
     options = [];
   }
 
+  //------------------------------------------------
+  // RENDERIZADO DEL COMPONENTE
   return (
     <div
       style={{
@@ -50,12 +60,13 @@ const DropDownMenu = ({
         marginBottom: "10px",
       }}
     >
-      {/* LABEL */}
+      {/* LABEL (TEXTO FUERA DEL DROPDOWN) */}
       <label
         style={{
           fontSize: fontSizes.dropDownText,
           color: colores.black,
           width: "180px",
+          textAlign: "right",
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -65,7 +76,7 @@ const DropDownMenu = ({
         {truncateText(label)}
       </label>
 
-      {/* SELECT */}
+      {/* SELECT (OPCIONES DEL DROPDOWN) */}
       <select
         value={value}
         onChange={onChange}
@@ -82,15 +93,17 @@ const DropDownMenu = ({
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          // ESTILOS PARA LA FLECHA DEL SELECT
           appearance: "none",
-          backgroundImage:
+          backgroundImage: // FLECHA HACIA ABAJO DEL SELECT
             "linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(135deg, black 50%, transparent 50%)",
-          backgroundPosition:
+          backgroundPosition: // POSICIÓN DE LA FLECHA
             "calc(100% - 15px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px)",
-          backgroundSize: "5px 5px, 5px 5px",
-          backgroundRepeat: "no-repeat",
+          backgroundSize: "5px 5px, 5px 5px", // TAMAÑO DE LA FLECHA
+          backgroundRepeat: "no-repeat", // EVITAR REPETICIÓN DE LA FLECHA
         }}
       >
+        {/* OPCIONES DEL SELECT */}
         {options.map((opt, i) => {
           const parsed = parseOption(opt);
           return (

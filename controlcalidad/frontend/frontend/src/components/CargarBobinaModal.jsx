@@ -3,23 +3,33 @@ import toast from 'react-hot-toast';
 import Modal from "./Modal";
 import DropDownMenu from "./DropDownMenu";
 import ModalConfirmacion from "./ModalConfirmacion";
+import colores from "../styles/colores";
+import { fontSizes } from "../styles/fontSizes";
+
+/*
+  MODAL PARA CARGAR UNA BOBINA EN UN PROCESO
+  SE USA EN LA PANTALLA DE CONTROL DE CADA LOTE EN LA VISTA OPERADOR
+ */
 
 const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) => {
-  const [usuarios, setUsuarios] = useState([]);
-  const [operador, setOperador] = useState("");
-  const [ayudante1, setAyudante1] = useState("");
-  const [ayudante2, setAyudante2] = useState("");
-  const [parametros, setParametros] = useState([]);
-  const [valoresParametros, setValoresParametros] = useState({});
-  const [showConfirmacion, setShowConfirmacion] = useState(false);
+  const [usuarios, setUsuarios] = useState([]); // Lista de usuarios con rol OPERADOR
+  const [operador, setOperador] = useState(""); // ID del operador seleccionado
+  const [ayudante1, setAyudante1] = useState(""); // ID del ayudante 1 seleccionado
+  const [ayudante2, setAyudante2] = useState(""); // ID del ayudante 2 seleccionado
+  const [parametros, setParametros] = useState([]); // Parámetros dinámicos de calidad
+  const [valoresParametros, setValoresParametros] = useState({}); // Valores BIEN-MAL-REGULAR
+  const [showConfirmacion, setShowConfirmacion] = useState(false); // Mostrar modal de confirmación
 
+  // ------------------------------------------------------
+  // Estados posibles para los parámetros de calidad
   const estadosCalidad = [
     { value: "", label: "Seleccione" },
     { value: "BIEN", label: "BIEN" },
     { value: "REGULAR", label: "REGULAR" },
-    { value: "MAL", label: "MAL" },
+    { value: "MAL", label: "MAL" }
   ];
 
+  // ------------------------------------------------------
   // Cargar usuarios cuando se abre el modal
   useEffect(() => {
     if (show) {
@@ -34,6 +44,7 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     }
   }, [show]);
 
+  // ------------------------------------------------------
   // Cargar parámetros dinámicos cuando se abre el modal
   useEffect(() => {
     if (show && proceso?.sectorId) {
@@ -52,8 +63,9 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     }
   }, [show, proceso]);
 
+  // ------------------------------------------------------
+  // Limpia todos los campos y cierra el modal
   const handleClose = () => {
-    // Resetear campos
     setOperador("");
     setAyudante1("");
     setAyudante2("");
@@ -62,27 +74,28 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     onClose();
   };
 
+  // ------------------------------------------------------
+  // Verifica que se haya seleccionado un operador (obligatorio)
   const handleConfirm = () => {
-    // Validación - solo operador es obligatorio
     if (!operador || operador === "") {
-      toast("Debe seleccionar un operador", {
-        icon: '⚠️',
+      toast("DEBE SELECCIONAR UN OPERADOR", {
         style: {
-          background: '#f59e0b',
-          color: '#fff',
+          background: colores.warningToast,
+          color: colores.white,
+          fontSize: fontSizes.body
         },
       });
       return;
     }
-    
+
     // Validar que todos los parámetros de calidad estén seleccionados
     for (const param of parametros) {
       if (!valoresParametros[param.nombreParametro] || valoresParametros[param.nombreParametro] === "") {
-        toast(`Debe seleccionar el estado de ${param.nombreParametro.toUpperCase()}`, {
-          icon: '⚠️',
+        toast(`DEBE SELECCIONAR EL ESTADO DE ${param.nombreParametro.toUpperCase()}`, {
           style: {
-            background: '#f59e0b',
-            color: '#fff',
+            background: colores.warningToast,
+            color: colores.white,
+            fontSize: fontSizes.body
           },
         });
         return;
@@ -93,6 +106,8 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     setShowConfirmacion(true);
   };
 
+  // ------------------------------------------------------
+  // Confirma el guardado de la bobina después de la confirmación
   const handleConfirmarGuardado = () => {
     // Buscar los nombres completos de los usuarios para mostrar en la UI
     const operadorUsuario = usuarios.find(u => u.id === parseInt(operador));
@@ -114,13 +129,15 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     handleClose();
   };
 
+  // ------------------------------------------------------
+  // Cancela la confirmación de guardado
   const handleCancelarConfirmacion = () => {
     setShowConfirmacion(false);
   };
 
   if (!show) return null;
 
-  // Opciones para los dropdowns - validar que usuarios sea un array
+  // Opciones para los dropdowns de usuarios - validar que usuarios sea un array
   const opcionesUsuarios = [
     { value: "", label: "Seleccione" },
     ...(Array.isArray(usuarios) ? usuarios.map(u => ({
@@ -129,6 +146,7 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     })) : [])
   ];
 
+ // Opciones para los dropdowns de ayudantes - validar que ayudante sea un array
   const opcionesAyudantes = [
     { value: "", label: "VACIO" },
     ...(Array.isArray(usuarios) ? usuarios.map(u => ({
@@ -137,76 +155,79 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     })) : [])
   ];
 
+  // ------------------------------------------------------
+  // Renderizado del componente
   return (
     <>
-    <Modal
-      title={`CARGAR BOBINA N°${numeroBobina || "?"}`}
-      width="450px"
-      onConfirm={handleConfirm}
-      onCancel={handleClose}
-    >
-      {/* OPERADOR */}
-      <div style={{ marginBottom: "20px" }}>
-        <DropDownMenu
-          label="OPERADOR"
-          value={operador}
-          height="45px"
-          gap="20px"
-          options={opcionesUsuarios}
-          onChange={(e) => setOperador(e.target.value)}
-        />
-      </div>
-
-      {/* AYUDANTE 1 */}
-      <div style={{ marginBottom: "20px" }}>
-        <DropDownMenu
-          label="AYUDANTE 1"
-          value={ayudante1}
-          height="45px"
-          gap="20px"
-          options={opcionesAyudantes}
-          onChange={(e) => setAyudante1(e.target.value)}
-        />
-      </div>
-
-      {/* AYUDANTE 2 */}
-      <div style={{ marginBottom: "20px" }}>
-        <DropDownMenu
-          label="AYUDANTE 2"
-          value={ayudante2}
-          height="45px"
-          gap="20px"
-          options={opcionesAyudantes}
-          onChange={(e) => setAyudante2(e.target.value)}
-        />
-      </div>
-
-      {/* PARÁMETROS DINÁMICOS */}
-      {parametros.map((param) => (
-        <div key={param.id} style={{ marginBottom: "20px" }}>
+      {/* MODAL DE CARGA DE BOBINA */}
+      <Modal
+        title={`CARGAR BOBINA N°${numeroBobina || "?"}`}
+        width="450px"
+        onConfirm={handleConfirm}
+        onCancel={handleClose}
+      >
+        {/* OPERADOR */}
+        <div style={{ marginBottom: "20px" }}>
           <DropDownMenu
-            label={param.nombreParametro.toUpperCase()}
-            value={valoresParametros[param.nombreParametro] || ""}
+            label={<>OPERADOR<span style={{ color: colores.errorToast }}> *</span></>}
+            value={operador}
             height="45px"
             gap="20px"
-            options={estadosCalidad}
-            onChange={(e) => setValoresParametros(prev => ({
-              ...prev,
-              [param.nombreParametro]: e.target.value
-            }))}
+            options={opcionesUsuarios}
+            onChange={(e) => setOperador(e.target.value)}
           />
         </div>
-      ))}
-    </Modal>
 
-    {/* Modal de Confirmación */}
-    <ModalConfirmacion
-      show={showConfirmacion}
-      titulo={`CARGAR BOBINA N°${numeroBobina || "?"}`}
-      mensaje="¿DESEA CONFIRMAR LOS CAMBIOS?"
-      onConfirm={handleConfirmarGuardado}
-      onCancel={handleCancelarConfirmacion}
-    />
+        {/* AYUDANTE 1 */}
+        <div style={{ marginBottom: "20px" }}>
+          <DropDownMenu
+            label="AYUDANTE 1"
+            value={ayudante1}
+            height="45px"
+            gap="20px"
+            options={opcionesAyudantes}
+            onChange={(e) => setAyudante1(e.target.value)}
+          />
+        </div>
+
+        {/* AYUDANTE 2 */}
+        <div style={{ marginBottom: "20px" }}>
+          <DropDownMenu
+            label="AYUDANTE 2"
+            value={ayudante2}
+            height="45px"
+            gap="20px"
+            options={opcionesAyudantes}
+            onChange={(e) => setAyudante2(e.target.value)}
+          />
+        </div>
+
+        {/* PARÁMETROS DINÁMICOS */}
+        {parametros.map((param) => (
+          <div key={param.id} style={{ marginBottom: "20px" }}>
+            <DropDownMenu
+              label={<>{param.nombreParametro.toUpperCase()}<span style={{ color: colores.errorToast }}> *</span></>}
+              value={valoresParametros[param.nombreParametro] || ""}
+              height="45px"
+              gap="20px"
+              options={estadosCalidad}
+              onChange={(e) => setValoresParametros(prev => ({
+                ...prev,
+                [param.nombreParametro]: e.target.value
+              }))}
+            />
+          </div>
+        ))}
+      </Modal>
+
+      {/* MODAL DE CONFIRMACION */}
+      <ModalConfirmacion
+        show={showConfirmacion}
+        titulo={`BOBINA N°${numeroBobina || "?"}`}
+        mensaje="¿DESEA CONFIRMAR LOS CAMBIOS?"
+        onConfirm={handleConfirmarGuardado}
+        onCancel={handleCancelarConfirmacion}
+      />
     </>
   );
 };
