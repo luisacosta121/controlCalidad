@@ -9,8 +9,21 @@ import { toast } from "sonner";
 
 const ParametrosPanel = () => {
   const [parametros, setParametros] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [parametroSeleccionado, setParametroSeleccionado] = useState(null);
+
+  const parametrosFiltrados = busqueda.trim() === ""
+    ? parametros
+    : parametros.filter((parametro) => {
+        const busquedaLower = busqueda.toLowerCase();
+        const nombreParametro = parametro.nombreParametro || "";
+        const sector = parametro.sector?.sector || "";
+        return (
+          nombreParametro.toLowerCase().includes(busquedaLower) ||
+          sector.toLowerCase().includes(busquedaLower)
+        );
+      });
 
   const cargarParametros = () => {
     console.log("Cargando parámetros...");
@@ -69,13 +82,26 @@ const ParametrosPanel = () => {
         <h2 style={styles.title}>GESTIÓN DE PARÁMETROS DE CALIDAD</h2>
       </div>
 
+      {/* Barra de búsqueda */}
+      <div style={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Buscar por sector o parámetro"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          style={styles.searchInput}
+        />
+      </div>
+
       {/* Tabla de parámetros */}
       <div style={styles.tableContainer}>
-        {parametros.length === 0 ? (
-          <p style={styles.emptyMessage}>No hay parámetros registrados</p>
+        {parametrosFiltrados.length === 0 ? (
+          <p style={styles.emptyMessage}>
+            {busqueda ? "No se encontraron parámetros" : "No hay parámetros registrados"}
+          </p>
         ) : (
           <TablaParametros
-            parametros={parametros}
+            parametros={parametrosFiltrados}
             onEditar={handleEditar}
             onEliminar={handleEliminar}
           />
@@ -123,6 +149,20 @@ const styles = {
     fontWeight: "bold",
     color: colores.black,
     margin: 0,
+  },
+  searchContainer: {
+    display: "flex",
+    justifyContent: "flex-start",
+    padding: "0px 0px 20px 0px",
+  },
+  searchInput: {
+    width: "100%",
+    maxWidth: "500px",
+    padding: "12px 20px",
+    fontSize: "16px",
+    border: `1px solid ${colores.primaryGray}`,
+    borderRadius: "8px",
+    outline: "none"
   },
   tableContainer: {
     overflow: "hidden",

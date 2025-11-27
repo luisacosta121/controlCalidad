@@ -9,8 +9,25 @@ import { toast } from "sonner";
 
 const MaquinasPanel = () => {
   const [maquinas, setMaquinas] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [maquinaSeleccionada, setMaquinaSeleccionada] = useState(null);
+
+  const maquinasFiltradas = busqueda.trim() === ""
+    ? maquinas
+    : maquinas.filter((maquina) => {
+        const busquedaLower = busqueda.toLowerCase();
+        const nombreMaquina = maquina.nombreMaquina || "";
+        const numero = maquina.numero ? maquina.numero.toString() : "";
+        const sector = typeof maquina.sector === "string" 
+          ? maquina.sector 
+          : maquina.sector?.sector || "";
+        return (
+          nombreMaquina.toLowerCase().includes(busquedaLower) ||
+          numero.includes(busquedaLower) ||
+          sector.toLowerCase().includes(busquedaLower)
+        );
+      });
 
   const cargarMaquinas = () => {
     fetch("http://localhost:8081/maquinas/no-eliminadas")
@@ -18,7 +35,13 @@ const MaquinasPanel = () => {
         if (!res.ok) throw new Error("Error al cargar máquinas");
         return res.json();
       })
-      .then((data) => setMaquinas(data))
+      .then((data) => {
+        console.log("Máquinas cargadas:", data);
+        if (data.length > 0) {
+          console.log("Ejemplo de máquina:", data[0]);
+        }
+        setMaquinas(data);
+      })
       .catch(() => toast.error("Error al cargar máquinas"));
   };
 
@@ -62,13 +85,26 @@ const MaquinasPanel = () => {
         <h2 style={styles.title}>GESTIÓN DE MÁQUINAS</h2>
       </div>
 
+      {/* Barra de búsqueda */}
+      <div style={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Buscar por sector o máquina"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          style={styles.searchInput}
+        />
+      </div>
+
       {/* Tabla de máquinas */}
       <div style={styles.tableContainer}>
-        {maquinas.length === 0 ? (
-          <p style={styles.emptyMessage}>No hay máquinas registradas</p>
+        {maquinasFiltradas.length === 0 ? (
+          <p style={styles.emptyMessage}>
+            {busqueda ? "No se encontraron máquinas" : "No hay máquinas registradas"}
+          </p>
         ) : (
           <TablaMaquinas
-            maquinas={maquinas}
+            maquinas={maquinasFiltradas}
             onEditar={handleEditar}
             onEliminar={handleEliminar}
           />
@@ -116,6 +152,20 @@ const styles = {
     fontWeight: "bold",
     color: colores.black,
     margin: 0,
+  },
+  searchContainer: {
+    display: "flex",
+    justifyContent: "flex-start",
+    padding: "0px 0px 20px 0px",
+  },
+  searchInput: {
+    width: "100%",
+    maxWidth: "500px",
+    padding: "12px 20px",
+    fontSize: "16px",
+    border: `1px solid ${colores.primaryGray}`,
+    borderRadius: "8px",
+    outline: "none"
   },
   tableContainer: {
     overflow: "hidden",
