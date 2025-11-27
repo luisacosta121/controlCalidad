@@ -24,4 +24,13 @@ public class ParametroCalidad {
     @ManyToOne
     @JoinColumn(name = "sector_id", nullable = false)
     private Sector sector;
+    
+    @Builder.Default
+    private boolean obligatorio = false;
+    
+    @Builder.Default
+    private boolean activo = true;
+    
+    @Builder.Default
+    private boolean eliminado = false;
 }

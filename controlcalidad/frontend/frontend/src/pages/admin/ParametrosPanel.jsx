@@ -1,85 +1,92 @@
 import { useState, useEffect } from "react";
-import TablaMaquinas from "../../components/TablaMaquinas";
-import FormularioMaquina from "../../components/FormularioMaquina";
+import TablaParametros from "../../components/TablaParametros";
+import FormularioParametro from "../../components/FormularioParametro";
 import PrimaryButton from "../../components/PrimaryButton";
 import colores from "../../styles/colores";
 import { buttonSizes } from "../../styles/buttonSize";
 import { fontSizes } from "../../styles/fontSizes";
 import { toast } from "sonner";
 
-const MaquinasPanel = () => {
-  const [maquinas, setMaquinas] = useState([]);
+const ParametrosPanel = () => {
+  const [parametros, setParametros] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [maquinaSeleccionada, setMaquinaSeleccionada] = useState(null);
+  const [parametroSeleccionado, setParametroSeleccionado] = useState(null);
 
-  const cargarMaquinas = () => {
-    fetch("http://localhost:8081/maquinas/no-eliminadas")
+  const cargarParametros = () => {
+    console.log("Cargando parámetros...");
+    fetch("http://localhost:8081/parametros/no-eliminados")
       .then((res) => {
-        if (!res.ok) throw new Error("Error al cargar máquinas");
+        if (!res.ok) throw new Error("Error al cargar parámetros");
         return res.json();
       })
-      .then((data) => setMaquinas(data))
-      .catch(() => toast.error("Error al cargar máquinas"));
+      .then((data) => {
+        console.log("Parámetros cargados:", data);
+        setParametros(data);
+      })
+      .catch((error) => {
+        console.error("Error al cargar:", error);
+        toast.error("Error al cargar parámetros");
+      });
   };
 
   useEffect(() => {
-    cargarMaquinas();
+    cargarParametros();
   }, []);
 
-  const handleNuevaMaquina = () => {
-    setMaquinaSeleccionada(null);
+  const handleNuevoParametro = () => {
+    setParametroSeleccionado(null);
     setModalOpen(true);
   };
 
-  const handleEditar = (maquina) => {
-    setMaquinaSeleccionada(maquina);
+  const handleEditar = (parametro) => {
+    setParametroSeleccionado(parametro);
     setModalOpen(true);
   };
 
   const handleEliminar = (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar esta máquina?")) return;
+    if (!window.confirm("¿Estás seguro de eliminar este parámetro?")) return;
 
-    fetch(`http://localhost:8081/maquinas/${id}`, {
+    fetch(`http://localhost:8081/parametros/${id}`, {
       method: "DELETE",
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Error al eliminar máquina");
-        toast.success("Máquina eliminada correctamente");
-        cargarMaquinas();
+        if (!res.ok) throw new Error("Error al eliminar parámetro");
+        toast.success("Parámetro eliminado correctamente");
+        cargarParametros();
       })
-      .catch(() => toast.error("Error al eliminar máquina"));
+      .catch(() => toast.error("Error al eliminar parámetro"));
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setMaquinaSeleccionada(null);
+    setParametroSeleccionado(null);
   };
 
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>GESTIÓN DE MÁQUINAS</h2>
+        <h2 style={styles.title}>GESTIÓN DE PARÁMETROS DE CALIDAD</h2>
       </div>
 
-      {/* Tabla de máquinas */}
+      {/* Tabla de parámetros */}
       <div style={styles.tableContainer}>
-        {maquinas.length === 0 ? (
-          <p style={styles.emptyMessage}>No hay máquinas registradas</p>
+        {parametros.length === 0 ? (
+          <p style={styles.emptyMessage}>No hay parámetros registrados</p>
         ) : (
-          <TablaMaquinas
-            maquinas={maquinas}
+          <TablaParametros
+            parametros={parametros}
             onEditar={handleEditar}
             onEliminar={handleEliminar}
           />
         )}
       </div>
 
-      {/* Botón crear nueva máquina */}
+      {/* Botón crear nuevo parámetro */}
       <div style={styles.buttonContainer}>
         <PrimaryButton
-          text="NUEVA MÁQUINA"
-          onClick={handleNuevaMaquina}
+          text="NUEVO PARÁMETRO"
+          onClick={handleNuevoParametro}
           color={colores.primaryBlue}
           textColor={colores.white}
           width={buttonSizes.mediumButton}
@@ -89,11 +96,11 @@ const MaquinasPanel = () => {
         />
       </div>
 
-      <FormularioMaquina
+      <FormularioParametro
         isOpen={modalOpen}
         onClose={handleCloseModal}
-        maquina={maquinaSeleccionada}
-        onGuardar={cargarMaquinas}
+        parametro={parametroSeleccionado}
+        onGuardar={cargarParametros}
       />
     </div>
   );
@@ -134,4 +141,4 @@ const styles = {
   },
 };
 
-export default MaquinasPanel;
+export default ParametrosPanel;

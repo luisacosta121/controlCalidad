@@ -1,13 +1,13 @@
 import colores from "../styles/colores";
-import FilaMaquina from "./FilaMaquina";
+import FilaParametro from "./FilaParametro";
 import { fontSizes } from "../styles/fontSizes";
 
 //---------------------------------------
-// TABLA DE MAQUINAS DEL ADMIN PANEL
-const TablaMaquinas = ({ maquinas, onEditar, onEliminar }) => {
+// TABLA DE PARAMETROS DEL ADMIN PANEL
+const TablaParametros = ({ parametros, onEditar, onEliminar }) => {
   const headerRowStyle = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 2fr",
+    gridTemplateColumns: "1fr 2fr 1fr 1fr 2fr",
     color: colores.black,
     padding: "12px 10px",
     borderBottom: `1px solid ${colores.black}`,
@@ -31,16 +31,17 @@ const TablaMaquinas = ({ maquinas, onEditar, onEliminar }) => {
           {/* Encabezado */}
           <div style={headerRowStyle}>
             <span>SECTOR</span>
-            <span>MÁQUINA</span>
+            <span>PARÁMETRO</span>
+            <span>OBLIGATORIO</span>
             <span>ESTADO</span>
             <span style={{ textAlign: "center" }}>ACCIONES</span>
           </div>
 
           {/* Filas */}
-          {maquinas.map((maquina, index) => (
-            <FilaMaquina
-              key={maquina.id}
-              maquina={maquina}
+          {parametros.map((parametro, index) => (
+            <FilaParametro
+              key={parametro.id}
+              parametro={parametro}
               index={index}
               onEditar={onEditar}
               onEliminar={onEliminar}
@@ -52,4 +53,4 @@ const TablaMaquinas = ({ maquinas, onEditar, onEliminar }) => {
   );
 };
 
-export default TablaMaquinas;
+export default TablaParametros;

@@ -5,6 +5,7 @@ const colores = {
   primaryYellow: "#FFC107",
   primaryOrange: "#E5892D",
   warningToast: "#FF9800",
+  sidebarBackground: "#3f3f41ff",
   errorToast: "#ff0000ff",
   primaryGray: "#D9D9D9",
   secondaryGray: "#E9E9E9",

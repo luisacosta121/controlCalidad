@@ -78,21 +78,45 @@ public class BobinaService {
     }
 
     public List<ProcesoListadoDTO> listarProcesos() {
-        List<Bobina> bobinas = bobinaRepo.findAll();
+        try {
+            List<Bobina> bobinas = bobinaRepo.findAll();
+            List<ProcesoListadoDTO> resultado = new java.util.ArrayList<>();
 
-        // Solo mostrar las bobinas "proceso" (sin controles de calidad) y no finalizadas
-        // Las bobinas con controles son las que se crean al "Cargar Bobina"
-        return bobinas.stream()
-                .filter(b -> controlRepo.findByBobinaId(b.getId()).isEmpty())
-                .filter(b -> b.getFinalizado() == null || !b.getFinalizado())
-                .map(b -> new ProcesoListadoDTO(
-                        b.getId(),
-                        b.getSector().getSector().name(),
-                        b.getSector().getId(),
-                        b.getMaquina(),
-                        b.getLote().getNumeroLote(),
-                        b.getLote().getProducto().getNombre() // o trabajo, segun tu DTO
-                )).toList();
+            for (Bobina b : bobinas) {
+                try {
+                    // Verificar que sea un proceso (sin controles) y no finalizado
+                    if (!controlRepo.findByBobinaId(b.getId()).isEmpty()) continue;
+                    if (b.getFinalizado() != null && b.getFinalizado()) continue;
+                    
+                    // Verificar datos válidos
+                    if (b.getLote() == null || b.getSector() == null) continue;
+                    if (b.getSector().getSector() == null) continue;
+                    
+                    String trabajo = "SIN PRODUCTO";
+                    if (b.getLote().getProducto() != null) {
+                        trabajo = b.getLote().getProducto().getNombre();
+                    }
+                    
+                    ProcesoListadoDTO dto = new ProcesoListadoDTO(
+                            b.getId(),
+                            b.getSector().getSector().name(),
+                            b.getSector().getId(),
+                            b.getMaquina(),
+                            b.getLote().getNumeroLote(),
+                            trabajo
+                    );
+                    resultado.add(dto);
+                } catch (Exception e) {
+                    System.err.println("Error procesando bobina " + b.getId() + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            return resultado;
+        } catch (Exception e) {
+            System.err.println("Error en listarProcesos: " + e.getMessage());
+            e.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
     }
 
     @Transactional
@@ -141,8 +165,13 @@ public class BobinaService {
                 String nombreParametro = entry.getKey();
                 String valorControl = entry.getValue();
                 
+                // Saltar parámetros con valor null (no obligatorios sin seleccionar)
+                if (valorControl == null || valorControl.isEmpty()) {
+                    continue;
+                }
+                
                 // Buscar el parámetro en el sector
-                ParametroCalidad parametro = parametroRepo.findByNombreParametroAndSectorId(nombreParametro, sectorId)
+                ParametroCalidad parametro = parametroRepo.findByNombreParametroAndSectorIdAndEliminadoFalse(nombreParametro, sectorId)
                         .orElseThrow(() -> new RuntimeException("Parámetro '" + nombreParametro + "' no encontrado para el sector"));
                 
                 // Crear el control de calidad

@@ -4,17 +4,17 @@ import SecondaryButton from "../../components/SecondaryButton";
 import { adminStyles } from "../../styles/adminStyles";
 import UsuariosPanel from "./UsuariosPanel";
 import MaquinasPanel from "./MaquinasPanel";
+import ParametrosPanel from "./ParametrosPanel";
 import PrimaryButton from "../../components/PrimaryButton";
-import { buttonSizes } from "../../styles/buttonSize";
 
 const AdminDashboard = ({ onCerrarSesion }) => {
   const [activeTab, setActiveTab] = useState("estadisticas");
 
   const tabs = [
-    { id: "estadisticas", label: "Estadísticas", icon: "📊" },
-    { id: "usuarios", label: "Usuarios", icon: "👥" },
-    { id: "maquinas", label: "Máquinas", icon: "🏭" },
-    { id: "parametros", label: "Parámetros", icon: "✅" },
+    { id: "estadisticas", label: "ESTADISTICAS", icon: "📊" },
+    { id: "usuarios", label: "USUARIOS", icon: "👥" },
+    { id: "maquinas", label: "MÁQUINAS", icon: "🏭" },
+    { id: "parametros", label: "PARÁMETROS", icon: "✅" },
   ];
 
   const renderContent = () => {
@@ -31,12 +31,7 @@ const AdminDashboard = ({ onCerrarSesion }) => {
       case "maquinas":
         return <MaquinasPanel />;
       case "parametros":
-        return (
-          <div style={adminStyles.placeholder}>
-            <h2>✅ Gestión de Parámetros de Calidad</h2>
-            <p>CRUD de controles de calidad por sector</p>
-          </div>
-        );
+        return <ParametrosPanel />;
       default:
         return null;
     }
@@ -49,31 +44,32 @@ const AdminDashboard = ({ onCerrarSesion }) => {
         {/* Sidebar Navigation */}
         <div style={adminStyles.sidebar}>
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                ...adminStyles.tab,
-                ...(activeTab === tab.id ? adminStyles.activeTab : {}),
-              }}
-            >
-              <span style={adminStyles.tabIcon}>{tab.icon}</span>
-              <span style={adminStyles.tabLabel}>{tab.label}</span>
-            </button>
+            <div key={tab.id} style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+              <PrimaryButton
+                text={`${tab.icon} ${tab.label}`}
+                onClick={() => setActiveTab(tab.id)}
+                color={activeTab === tab.id ? colores.primaryOrange : colores.lightGray}
+                textColor={activeTab === tab.id ? colores.white : colores.black}
+                width="130px"
+                height="50px"
+                fontWeight={activeTab === tab.id ? "bold" : "500"}
+              />
+            </div>
           ))}
 
           {/* Botón Cerrar Sesión */}
           <div style={{
             marginTop: "auto",
             paddingTop: "20px",
-            paddingLeft: "10px",
+            paddingLeft: "5px",
+            paddingRight: "5px",
           }}>
             <PrimaryButton
               text="CERRAR SESION"
               onClick={onCerrarSesion}
               color={colores.primaryRed}
               textColor={colores.white}
-              width={buttonSizes.mediumButton}
+              width="130px"
               height="55px"
               fontWeight="bold"
             />

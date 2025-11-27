@@ -10,6 +10,7 @@ import { buttonSizes } from "../../styles/buttonSize";
 
 const UsuariosPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
@@ -21,6 +22,17 @@ const UsuariosPanel = () => {
     rol: "",
     activo: true,
   });
+
+  const usuariosFiltrados = busqueda.trim() === ""
+    ? usuarios
+    : usuarios.filter((usuario) => {
+        const busquedaLower = busqueda.toLowerCase();
+        return (
+          usuario.usuario.toLowerCase().includes(busquedaLower) ||
+          usuario.nombre.toLowerCase().includes(busquedaLower) ||
+          usuario.apellido.toLowerCase().includes(busquedaLower)
+        );
+      });
 
   const cargarUsuarios = () => {
     fetch("http://localhost:8081/usuarios/no-eliminados")
@@ -120,13 +132,27 @@ const UsuariosPanel = () => {
         <h2 style={styles.title}>GESTION DE USUARIOS</h2>
       </div>
 
+      {/* Barra de búsqueda */}
+      <div style={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Buscar por usuario, nombre o apellido"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          style={styles.searchInput}
+          width="500px"
+        />
+      </div>
+
       {/* Tabla de usuarios */}
       <div style={styles.tableContainer}>
-        {usuarios.length === 0 ? (
-          <p style={styles.emptyMessage}>No hay usuarios registrados</p>
+        {usuariosFiltrados.length === 0 ? (
+          <p style={styles.emptyMessage}>
+            {busqueda ? "No se encontraron usuarios" : "No hay usuarios registrados"}
+          </p>
         ) : (
           <TablaUsuarios
-            usuarios={usuarios}
+            usuarios={usuariosFiltrados}
             onEditar={abrirModalEditar}
             onEliminar={handleEliminar}
           />
@@ -181,6 +207,21 @@ const styles = {
     fontWeight: "bold",
     color: colores.black,
     margin: 0,
+  },
+  searchContainer: {
+    display: "flex",
+    justifyContent: "flex-start", // ALINEAR A LA IZQUIERDA LA BUSQUEDA
+    padding: "0px 0px 20px 0px", // PRIMERO ES ARRIBA; SEGUNDO DERECHA; TERCERO ABAJO; CUARTO IZQUIERDA
+  },
+  searchInput: {
+    width: "100%",
+    maxWidth: "500px",
+    padding: "12px 20px",
+    fontSize: "16px",
+    border: `1px solid ${colores.primaryGray}`,
+    borderRadius: "8px",
+    outline: "none"
+
   },
   tableContainer: {
     overflow: "hidden",

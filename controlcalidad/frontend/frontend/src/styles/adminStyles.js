@@ -31,9 +31,9 @@ export const adminStyles = {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
-    padding: "20px 10px 20px 5px",
-    width: "140px",
-    backgroundColor: colores.white,
+    padding: "50px 10px 20px 5px",
+    width: "160px",
+    backgroundColor: colores.sidebarBackground,
     flexShrink: 0,
   },
   tab: {

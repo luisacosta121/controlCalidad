@@ -88,17 +88,19 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
       return;
     }
 
-    // Validar que todos los parámetros de calidad estén seleccionados
+    // Validar solo los parámetros obligatorios
     for (const param of parametros) {
-      if (!valoresParametros[param.nombreParametro] || valoresParametros[param.nombreParametro] === "") {
-        toast(`DEBE SELECCIONAR EL ESTADO DE ${param.nombreParametro.toUpperCase()}`, {
-          style: {
-            background: colores.warningToast,
-            color: colores.white,
-            fontSize: fontSizes.body
-          },
-        });
-        return;
+      if (param.obligatorio) {
+        if (!valoresParametros[param.nombreParametro] || valoresParametros[param.nombreParametro] === "") {
+          toast(`DEBE SELECCIONAR EL ESTADO DE ${param.nombreParametro.toUpperCase()}`, {
+            style: {
+              background: colores.warningToast,
+              color: colores.white,
+              fontSize: fontSizes.body
+            },
+          });
+          return;
+        }
       }
     }
 
@@ -114,6 +116,13 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
     const ayudante1Usuario = ayudante1 ? usuarios.find(u => u.id === parseInt(ayudante1)) : null;
     const ayudante2Usuario = ayudante2 ? usuarios.find(u => u.id === parseInt(ayudante2)) : null;
 
+    // Filtrar valores vacíos y convertirlos a null
+    const parametrosLimpios = {};
+    Object.keys(valoresParametros).forEach(key => {
+      const valor = valoresParametros[key];
+      parametrosLimpios[key] = (valor && valor !== "") ? valor : null;
+    });
+
     const bobina = {
       operadorId: parseInt(operador),
       ayudante1Id: ayudante1 ? parseInt(ayudante1) : null,
@@ -121,7 +130,7 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
       operadorNombre: operadorUsuario ? `${operadorUsuario.nombre} ${operadorUsuario.apellido}` : "",
       ayudante1Nombre: ayudante1Usuario ? `${ayudante1Usuario.nombre} ${ayudante1Usuario.apellido}` : null,
       ayudante2Nombre: ayudante2Usuario ? `${ayudante2Usuario.nombre} ${ayudante2Usuario.apellido}` : null,
-      ...valoresParametros, // Agregar todos los parámetros dinámicamente
+      ...parametrosLimpios, // Agregar parámetros con valores null en lugar de cadenas vacías
     };
 
     onConfirm(bobina);
@@ -206,7 +215,13 @@ const CargarBobinaModal = ({ show, onClose, onConfirm, numeroBobina, proceso }) 
         {parametros.map((param) => (
           <div key={param.id} style={{ marginBottom: "20px" }}>
             <DropDownMenu
-              label={<>{param.nombreParametro.toUpperCase()}<span style={{ color: colores.errorToast }}> *</span></>}
+              label={
+                param.obligatorio ? (
+                  <>{param.nombreParametro.toUpperCase()}<span style={{ color: colores.errorToast }}> *</span></>
+                ) : (
+                  param.nombreParametro.toUpperCase()
+                )
+              }
               value={valoresParametros[param.nombreParametro] || ""}
               height="45px"
               gap="20px"

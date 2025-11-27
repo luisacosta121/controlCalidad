@@ -13,6 +13,8 @@ public interface ParametroCalidadRepository extends JpaRepository<ParametroCalid
     
     Optional<ParametroCalidad> findByNombreParametro(String nombreParametro);
     
-    Optional<ParametroCalidad> findByNombreParametroAndSectorId(String nombreParametro, Long sectorId);
+    Optional<ParametroCalidad> findByNombreParametroAndSectorIdAndEliminadoFalse(String nombreParametro, Long sectorId);
+    
+    List<ParametroCalidad> findByEliminadoFalse();
 
 }
