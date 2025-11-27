@@ -1,6 +1,7 @@
 package com.controlcalidad.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class BobinaService {
     private final ControlCalidadRepository controlRepo;
     private final UsuarioRepository usuarioRepo;
     private final ParametroCalidadRepository parametroRepo;
+    private final TwilioNotificationService twilioService;
 
     public Optional<CrearBobinaResponseDTO> crearBobina(Long loteId, String sectorStr, String maquina) {
 
@@ -159,6 +161,7 @@ public class BobinaService {
         // 4. Crear controles de calidad dinámicamente para cada parámetro recibido
         LocalDateTime ahora = LocalDateTime.now();
         Long sectorId = nuevaBobina.getSector().getId();
+        List<String> parametrosRechazados = new ArrayList<>();
         
         if (dto.getControles() != null) {
             for (Map.Entry<String, String> entry : dto.getControles().entrySet()) {
@@ -185,10 +188,32 @@ public class BobinaService {
                         .build();
                 
                 controlRepo.save(control);
+                
+                // Si el valor es MAL, agregarlo a la lista de rechazos
+                if ("MAL".equals(valorControl)) {
+                    parametrosRechazados.add(nombreParametro);
+                }
             }
         }
+        
+        // 5. Enviar notificación si hay parámetros rechazados
+        if (!parametrosRechazados.isEmpty()) {
+            String numeroLote = procesoOriginal.getLote().getNumeroLote();
+            String sector = nuevaBobina.getSector().getSector().name();
+            String trabajo = procesoOriginal.getLote().getProducto() != null 
+                    ? procesoOriginal.getLote().getProducto().getNombre() 
+                    : "SIN PRODUCTO";
+            
+            twilioService.enviarNotificacionRechazo(
+                nuevaBobina.getNumeroBobina(), 
+                sector,
+                numeroLote, 
+                trabajo,
+                parametrosRechazados
+            );
+        }
 
-        // 5. Devolver DTO con los datos
+        // 6. Devolver DTO con los datos
         return new BobinaConControlesDTO(
                 nuevaBobina.getId(),
                 nuevaBobina.getNumeroBobina(),

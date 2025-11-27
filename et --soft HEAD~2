@@ -1,0 +1,18 @@
+[33ma77a8a2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Clean commit without secrets
+[33m51f54c7[m Se agrega funcionalidad de Twilio para envio de productos rechazados
+[33me9679e1[m[33m ([m[1;31morigin/main[m[33m)[m Ya hay barra de busqueda en todas las pantallas de admin, solo faltan las estadisticas y corregir estilos menores
+[33m2b56317[m se corrigio el estilos del lado admin
+[33m1d61c6f[m Funcionando la pantalla de carga de maquinas en panel admin
+[33m01d6564[m Se componentizo varias partes del codigo y se reviso la estructura del front
+[33m709894f[m Se creo pantalla de admin para configurar usuarios, faltan estilos
+[33m36738fd[m Se crea pantalla de login y dashboard de Admin
+[33m0b490d7[m Pequeñas correciones del lado usuario
+[33m31bddf6[m Se agrega scroll horizontal
+[33m2a5cdf4[m Se funciona cargar proceso y cargar bobina, junto con finalizar trabajo
+[33m3ca054e[m Ya funciona el modal para cargar procesos
+[33mca29531[m Se creo front y componentes como botones, modal, inputs
+[33mb1afc47[m Hasta aca el back funciona, despues de este commit comenzare con el front basico
+[33m30ff228[m Se pueden cargar controles a las bobinas
+[33mb8c23a3[m Se agregaron controladores y servicios. Se probo con Postman el login de usuario, seleccionar sector y buscar trabajo por lote
+[33ma8d9595[m Se crearon entidades de controlcalidad, controlparametro y parametrocalidad y dataloader
+[33m09111c4[m[33m ([m[1;32mmaster[m[33m)[m Creacion de modelos bobina, lote, producto, sector, usuario, y sus repositorios; tambien se crearon enums
