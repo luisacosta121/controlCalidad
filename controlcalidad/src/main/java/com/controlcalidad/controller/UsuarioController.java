@@ -38,6 +38,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
+    @GetMapping("/no-eliminados")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosNoEliminados() {
+        List<Usuario> usuarios = usuarioService.obtenerNoEliminados();
+        return ResponseEntity.ok(usuarios);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
         return usuarioService.obtenerPorId(id)
@@ -60,8 +66,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        usuarioService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        boolean eliminado = usuarioService.eliminar(id);
+        if (eliminado) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/login")

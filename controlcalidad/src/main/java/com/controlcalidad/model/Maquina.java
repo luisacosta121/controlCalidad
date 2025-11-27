@@ -23,4 +23,10 @@ public class Maquina {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SectorEnum sector;
+    
+    @Builder.Default
+    private boolean activo = true;
+    
+    @Builder.Default
+    private boolean eliminado = false;
 }

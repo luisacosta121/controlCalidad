@@ -10,7 +10,7 @@ const InputField = ({
     onChange, // FUNCIÓN ONCHANGE
     width, // ANCHO DEL INPUT
     height, // ALTURA DEL INPUT
-    gap, // ESPACIO ENTRE LABEL E INPUT
+    gap = "20px", // ESPACIO ENTRE LABEL E INPUT
     maxLength, // LONGITUD MÁXIMA DEL INPUT
     placeholder = "", // TEXTO PLACEHOLDER
     readOnly = false, // SI ES TRUE EL INPUT NO SE PUEDE EDITAR
@@ -31,7 +31,7 @@ const InputField = ({
                 color: colores.black,
                 fontWeight: "regular",
                 width: "180px",
-                textAlign: "left",
+                textAlign: "right",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis" // PARA TEXTO MUY LARGO AGREGA "..."

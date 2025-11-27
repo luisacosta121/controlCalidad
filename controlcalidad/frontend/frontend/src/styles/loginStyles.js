@@ -85,9 +85,9 @@ export const loginStyles = {
   },
   loginButtons: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
     gap: "15px",
     marginTop: "10px",
-    alignItems: "center",
+    justifyContent: "center",
   },
 };

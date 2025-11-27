@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import colores from "../../styles/colores";
 import PrimaryButton from "../../components/PrimaryButton";
-import SecondaryButton from "../../components/SecondaryButton";
 import Modal from "../../components/Modal";
-import InputField from "../../components/InputField";
-import DropDownMenu from "../../components/DropDownMenu";
+import TablaUsuarios from "../../components/TablaUsuarios";
+import FormularioUsuario from "../../components/FormularioUsuario";
 import { fontSizes } from "../../styles/fontSizes";
 import { buttonSizes } from "../../styles/buttonSize";
 
@@ -24,7 +23,7 @@ const UsuariosPanel = () => {
   });
 
   const cargarUsuarios = () => {
-    fetch("http://localhost:8081/usuarios")
+    fetch("http://localhost:8081/usuarios/no-eliminados")
       .then((res) => res.json())
       .then(setUsuarios)
       .catch(() => toast.error("Error al cargar usuarios"));
@@ -104,7 +103,10 @@ const UsuariosPanel = () => {
     if (!window.confirm("¿Estás seguro de eliminar este usuario?")) return;
 
     fetch(`http://localhost:8081/usuarios/${id}`, { method: "DELETE" })
-      .then(() => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error al eliminar usuario");
+        }
         toast.success("Usuario eliminado");
         cargarUsuarios();
       })
@@ -123,91 +125,25 @@ const UsuariosPanel = () => {
         {usuarios.length === 0 ? (
           <p style={styles.emptyMessage}>No hay usuarios registrados</p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-            <div style={{ flex: 1, overflow: "auto" }}>
-              <div style={{ minWidth: "max-content" }}>
-                {/* Encabezado */}
-                <div style={styles.headerRow}>
-                <span>USUARIO</span>
-                <span>NOMBRE</span>
-                <span>APELLIDO</span>
-                <span>ROL</span>
-                <span>ESTADO</span>
-                <span style={{ textAlign: "center" }}>ACCIONES</span>
-              </div>
-
-              {/* Filas */}
-              {usuarios.map((usuario, index) => (
-                <div
-                  key={usuario.id}
-                  style={{
-                    ...styles.row,
-                    backgroundColor: index % 2 === 0 ? colores.white : colores.secondaryGray,
-                  }}
-                >
-                  <span>{usuario.usuario}</span>
-                  <span>{usuario.nombre}</span>
-                  <span>{usuario.apellido}</span>
-                  <span>
-                    <SecondaryButton
-                      text={usuario.rol}
-                      color={usuario.rol === "ADMIN" ? colores.primaryOrange : colores.primaryBlue}
-                      textColor={colores.white}
-                      width={buttonSizes.smallButton}
-                      fontSize={fontSizes.body}
-                      fontWeight="600"
-                      disabled
-                    />
-                  </span>
-                  <span>
-                    <SecondaryButton
-                      text={usuario.activo ? "ACTIVO" : "INACTIVO"}
-                      color={usuario.activo ? colores.primaryGreen : colores.primaryRed}
-                      textColor={colores.white}
-                      width={buttonSizes.smallButton}
-                      fontSize={fontSizes.body}
-                      fontWeight="600"
-                      disabled
-                    />
-                  </span>
-                  <div style={styles.actionButtons}>
-                    <SecondaryButton
-                      text="Editar"
-                      color={colores.primaryBlue}
-                      textColor={colores.white}
-                      onClick={() => abrirModalEditar(usuario)}
-                      width={buttonSizes.smallButton}
-                      fontSize={fontSizes.buttonText}
-                      fontWeight="bold"
-                    />
-                    <SecondaryButton
-                      text="Eliminar"
-                      color={colores.primaryRed}
-                      textColor={colores.white}
-                      onClick={() => handleEliminar(usuario.id)}
-                      width={buttonSizes.smallButton}
-                      fontSize={fontSizes.buttonText}
-                      fontWeight="bold"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          </div>
+          <TablaUsuarios
+            usuarios={usuarios}
+            onEditar={abrirModalEditar}
+            onEliminar={handleEliminar}
+          />
         )}
       </div>
 
       {/* Botón crear nuevo usuario */}
       <div style={styles.buttonContainer}>
         <PrimaryButton
-          text="+ NUEVO USUARIO"
+          text="NUEVO USUARIO"
           color={colores.primaryBlue}
           textColor={colores.white}
-          onClick={abrirModalCrear}
-          width={buttonSizes.largeMediumButton}
-          fontSize={fontSizes.buttonText}
+          width={buttonSizes.mediumButton}
+          height="55px"
           fontWeight="bold"
+          onClick={abrirModalCrear}
+          fontSize={fontSizes.buttonText}
         />
       </div>
 
@@ -218,55 +154,11 @@ const UsuariosPanel = () => {
         onCancel={() => setShowModal(false)}
         onConfirm={handleSubmit}
       >
-        <div style={styles.form}>
-          <InputField
-            label="Usuario *"
-            value={formData.usuario}
-            onChange={(e) => setFormData({ ...formData, usuario: e.target.value })}
-            placeholder="Ingrese usuario"
-          />
-          <InputField
-            label="Nombre *"
-            value={formData.nombre}
-            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-            placeholder="Ingrese nombre"
-          />
-          <InputField
-            label="Apellido *"
-            value={formData.apellido}
-            onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
-            placeholder="Ingrese apellido"
-          />
-          <DropDownMenu
-            label="Rol *"
-            options={["", "OPERADOR", "ADMIN"]}
-            value={formData.rol}
-            onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
-          />
-          
-          {formData.rol === "ADMIN" && (
-            <InputField
-              label={modoEdicion ? "Contraseña (dejar vacío para mantener)" : "Contraseña *"}
-              type="password"
-              value={formData.passwordHash}
-              onChange={(e) => setFormData({ ...formData, passwordHash: e.target.value })}
-              placeholder="Ingrese contraseña"
-            />
-          )}
-
-          {formData.rol === "OPERADOR" && (
-            <p style={styles.infoText}>
-              ℹ️ Los operadores no requieren contraseña
-            </p>
-          )}
-
-          <DropDownMenu
-            label="Estado *"
-            options={["Activo", "Inactivo"]}
-            value={formData.activo ? "Activo" : "Inactivo"}
-            onChange={(e) => setFormData({ ...formData, activo: e.target.value === "Activo" })}
-          />
-        </div>
+        <FormularioUsuario
+          formData={formData}
+          setFormData={setFormData}
+          modoEdicion={modoEdicion}
+        />
       </Modal>
     </div>
   );
@@ -294,36 +186,6 @@ const styles = {
     overflow: "hidden",
     flex: 1,
   },
-  headerRow: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 2fr",
-    color: colores.black,
-    padding: "12px 10px",
-    borderBottom: `1px solid ${colores.black}`,
-    fontSize: fontSizes.dropDownText,
-    fontWeight: "regular",
-    backgroundColor: colores.white,
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-  },
-  row: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 2fr",
-    padding: "12px 10px",
-    alignItems: "center",
-    color: colores.black,
-    fontSize: fontSizes.textList,
-    borderBottom: `1px solid ${colores.black}`,
-    borderLeft: `4px solid ${colores.primaryOrange}`,
-    fontWeight: "600",
-    boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
-  },
-  actionButtons: {
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-  },
   buttonContainer: {
     display: "flex",
     justifyContent: "flex-end",
@@ -334,19 +196,6 @@ const styles = {
     padding: "40px",
     fontSize: "18px",
     color: colores.primaryGray,
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  infoText: {
-    fontSize: "14px",
-    color: colores.primaryBlue,
-    backgroundColor: colores.lightGray,
-    padding: "10px",
-    borderRadius: "8px",
-    margin: 0,
   },
 };
 

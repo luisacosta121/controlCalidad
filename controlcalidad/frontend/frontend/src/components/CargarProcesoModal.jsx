@@ -41,9 +41,13 @@ const CargarProcesoModal = ({ show, onClose, onConfirm }) => {
       setMaquina(""); // RESETEA MÁQUINA SELECCIONADA
       return;
     }
-    fetch(`http://localhost:8081/maquinas/${sector}`)
+    fetch(`http://localhost:8081/maquinas/sector/${sector}`)
       .then(r => r.json())
-      .then(setMaquinas)
+      .then(data => {
+        // Filtrar solo máquinas activas y no eliminadas
+        const maquinasActivas = data.filter(m => m.activo && !m.eliminado);
+        setMaquinas(maquinasActivas);
+      })
       .catch(() => setMaquinas([]));
   }, [sector]);
 

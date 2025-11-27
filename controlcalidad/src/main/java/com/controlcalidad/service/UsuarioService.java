@@ -46,8 +46,17 @@ public class UsuarioService {
         });
     }
 
-    public void eliminar(Long id) {
-        usuarioRepository.deleteById(id);
+    public boolean eliminar(Long id) {
+        // Marcamos el usuario como eliminado para mantener integridad referencial
+        return usuarioRepository.findById(id).map(usuario -> {
+            usuario.setEliminado(true);
+            usuarioRepository.save(usuario);
+            return true;
+        }).orElse(false);
+    }
+
+    public List<Usuario> obtenerNoEliminados() {
+        return usuarioRepository.findByEliminadoFalse();
     }
 
     public Optional<Usuario> login(String usuario, String password) {

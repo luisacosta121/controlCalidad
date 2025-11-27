@@ -11,7 +11,7 @@ const DropDownMenu = ({
   value, // VALOR SELECCIONADO
   onChange,
   height, // ALTURA DEL SELECT
-  gap, // ESPACIO ENTRE LABEL Y SELECT
+  gap = "20px", // ESPACIO ENTRE LABEL Y SELECT
   width = "200px", // ANCHO DEL SELECT
   options = [], // OPCIONES DEL SELECT
 }) => {

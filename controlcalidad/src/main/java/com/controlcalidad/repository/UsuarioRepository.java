@@ -10,6 +10,8 @@ import com.controlcalidad.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByActivoTrue();
-    
+
     Optional<Usuario> findByUsuarioAndPasswordHash(String usuario, String passwordHash);
+    
+    List<Usuario> findByEliminadoFalse();
 }

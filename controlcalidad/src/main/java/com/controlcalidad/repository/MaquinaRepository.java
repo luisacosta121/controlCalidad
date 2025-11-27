@@ -9,4 +9,8 @@ import java.util.List;
 public interface MaquinaRepository extends JpaRepository<Maquina, Long> {
 
     List<Maquina> findBySector(SectorEnum sector);
+    
+    List<Maquina> findByEliminadoFalse();
+    
+    List<Maquina> findBySectorAndActivoTrueAndEliminadoFalse(SectorEnum sector);
 }

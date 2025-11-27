@@ -25,17 +25,20 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Crear usuario administrador
-        usuarioRepo.save(Usuario.builder()
-                .usuario("admin")
-                .nombre("Administrador")
-                .apellido("Sistema")
-                .passwordHash("admin123")
-                .rol(RolUsuario.ADMIN)
-                .activo(true)
-                .build());
+        // Crear usuario administrador solo si no existe
+        if (usuarioRepo.findByUsuarioAndPasswordHash("admin", "admin123").isEmpty()) {
+            usuarioRepo.save(Usuario.builder()
+                    .usuario("admin")
+                    .nombre("Administrador")
+                    .apellido("Sistema")
+                    .passwordHash("admin123")
+                    .rol(RolUsuario.ADMIN)
+                    .activo(true)
+                    .build());
+        }
 
-        // Crear sectores
+        // Crear sectores solo si no existen
+        if (sectorRepo.count() == 0) {
         Sector extrusion = sectorRepo.save(Sector.builder().sector(SectorEnum.EXTRUSION).build());
         Sector impresion = sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build());
         Sector confeccion = sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build());
@@ -142,6 +145,7 @@ public class DataLoader implements CommandLineRunner {
                 .nombreParametro("bujes")
                 .orden(3)
                 .build());
+        }
     }
 
 }

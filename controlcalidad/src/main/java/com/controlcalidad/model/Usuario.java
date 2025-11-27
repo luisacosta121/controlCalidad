@@ -29,5 +29,8 @@ public class Usuario {
     private RolUsuario rol;
     
     private boolean activo;
+    
+    @Builder.Default
+    private boolean eliminado = false;
 
 }

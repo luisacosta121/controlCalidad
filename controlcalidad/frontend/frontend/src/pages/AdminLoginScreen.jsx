@@ -3,8 +3,8 @@ import toast from "react-hot-toast";
 import colores from "../styles/colores";
 import InputField from "../components/InputField";
 import PrimaryButton from "../components/PrimaryButton";
-import SecondaryButton from "../components/SecondaryButton";
 import { loginStyles } from "../styles/loginStyles";
+import { buttonSizes } from "../styles/buttonSize";
 
 //-------------------------------------------------
 // PANTALLA DE LOGIN PARA ADMINISTRADOR
@@ -59,37 +59,37 @@ const AdminLoginScreen = ({ onLogin, onVolver }) => {
                         value={usuario}
                         onChange={(e) => setUsuario(e.target.value)}
                         placeholder="Ingrese su usuario"
-                        width="100%"
+                        width="300px"
                         height="45px"
                         gap="20px"
                     />
                     <InputField
-                        label="CONTRASEÑA"
+                        label="CLAVE"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Ingrese su contraseña"
-                        width="100%"
+                        placeholder="Ingrese su clave"
+                        width="300px"
                         height="45px"
                         gap="20px"
                     />
                     <div style={loginStyles.loginButtons}>
-                        <SecondaryButton
-                            text="← VOLVER"
-                            color={colores.primaryGray}
-                            textColor={colores.black}
+                        <PrimaryButton
+                            text="VOLVER"
                             onClick={onVolver}
-                            width="200px"
                             height="55px"
                             fontWeight="bold"
+                            color={colores.primaryGray}
+                            textColor={colores.black}
+                            width={buttonSizes.mediumButton}
                         />
                         <PrimaryButton
                             text="INGRESAR"
-                            color={colores.primaryOrange}
-                            textColor={colores.white}
                             onClick={handleLoginAdmin}
-                            width="200px"
                             height="55px"
                             fontWeight="bold"
+                            color={colores.primaryBlue}
+                            textColor={colores.white}
+                            width={buttonSizes.mediumButton}
                         />
                     </div>
                 </div>

@@ -3,6 +3,9 @@ import colores from "../../styles/colores";
 import SecondaryButton from "../../components/SecondaryButton";
 import { adminStyles } from "../../styles/adminStyles";
 import UsuariosPanel from "./UsuariosPanel";
+import MaquinasPanel from "./MaquinasPanel";
+import PrimaryButton from "../../components/PrimaryButton";
+import { buttonSizes } from "../../styles/buttonSize";
 
 const AdminDashboard = ({ onCerrarSesion }) => {
   const [activeTab, setActiveTab] = useState("estadisticas");
@@ -26,12 +29,7 @@ const AdminDashboard = ({ onCerrarSesion }) => {
       case "usuarios":
         return <UsuariosPanel />;
       case "maquinas":
-        return (
-          <div style={adminStyles.placeholder}>
-            <h2>🏭 Gestión de Máquinas</h2>
-            <p>CRUD de máquinas por sector</p>
-          </div>
-        );
+        return <MaquinasPanel />;
       case "parametros":
         return (
           <div style={adminStyles.placeholder}>
@@ -46,11 +44,6 @@ const AdminDashboard = ({ onCerrarSesion }) => {
 
   return (
     <div style={adminStyles.container}>
-      {/* Header */}
-      <div style={adminStyles.header}>
-        <h1 style={adminStyles.title}>PANEL DE ADMINISTRACIÓN</h1>
-      </div>
-
       {/* Main Layout con Sidebar y Content */}
       <div style={adminStyles.mainLayout}>
         {/* Sidebar Navigation */}
@@ -68,16 +61,21 @@ const AdminDashboard = ({ onCerrarSesion }) => {
               <span style={adminStyles.tabLabel}>{tab.label}</span>
             </button>
           ))}
-          
+
           {/* Botón Cerrar Sesión */}
-          <div style={{ marginTop: "auto", paddingTop: "20px" }}>
-            <SecondaryButton
-              text="Cerrar Sesión"
+          <div style={{
+            marginTop: "auto",
+            paddingTop: "20px",
+            paddingLeft: "10px",
+          }}>
+            <PrimaryButton
+              text="CERRAR SESION"
+              onClick={onCerrarSesion}
               color={colores.primaryRed}
               textColor={colores.white}
-              onClick={onCerrarSesion}
-              width="100%"
-              fontWeight="600"
+              width={buttonSizes.mediumButton}
+              height="55px"
+              fontWeight="bold"
             />
           </div>
         </div>
