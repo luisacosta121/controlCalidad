@@ -31,7 +31,7 @@ const TablaMaquinas = ({ maquinas, onEditar, onEliminar }) => {
           {/* Encabezado */}
           <div style={headerRowStyle}>
             <span>SECTOR</span>
-            <span>MÁQUINA</span>
+            <span>MAQUINA</span>
             <span>ESTADO</span>
             <span style={{ textAlign: "center" }}>ACCIONES</span>
           </div>

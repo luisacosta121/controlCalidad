@@ -79,7 +79,7 @@ const ParametrosPanel = () => {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>GESTIÓN DE PARÁMETROS DE CALIDAD</h2>
+        <h2 style={styles.title}>GESTION DE PARAMETROS DE CALIDAD</h2>
       </div>
 
       {/* Barra de búsqueda */}
@@ -88,7 +88,7 @@ const ParametrosPanel = () => {
           type="text"
           placeholder="Buscar por sector o parámetro"
           value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
           style={styles.searchInput}
         />
       </div>
@@ -96,8 +96,8 @@ const ParametrosPanel = () => {
       {/* Tabla de parámetros */}
       <div style={styles.tableContainer}>
         {parametrosFiltrados.length === 0 ? (
-          <p style={styles.emptyMessage}>
-            {busqueda ? "No se encontraron parámetros" : "No hay parámetros registrados"}
+          <p style={{ ...styles.emptyMessage, color: colores.primaryGray, fontSize: fontSizes.dropDownText }}>
+            {busqueda ? "NO SE ENCONTRARON PARAMETROS" : "NO HAY PARAMETROS REGISTRADOS"}
           </p>
         ) : (
           <TablaParametros

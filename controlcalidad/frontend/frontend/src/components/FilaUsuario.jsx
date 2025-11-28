@@ -4,7 +4,7 @@ import { fontSizes } from "../styles/fontSizes";
 import { buttonSizes } from "../styles/buttonSize";
 import PrimaryButton from "./PrimaryButton";
 
-const MAX_TRUNCATE_LENGTH = 10;
+const MAX_TRUNCATE_LENGTH = 15;
 //---------------------------------------
 // FILA DE USUARIO EN LA TABLA DE USUARIOS DEL ADMIN PANEL
 const FilaUsuario = ({ usuario, index, onEditar, onEliminar }) => {
@@ -16,7 +16,7 @@ const FilaUsuario = ({ usuario, index, onEditar, onEliminar }) => {
     color: colores.black,
     fontSize: fontSizes.textList,
     borderLeft: `4px solid ${colores.primaryOrange}`,
-    fontWeight: "600",
+    fontWeight: "normal",
     boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
     backgroundColor: index % 2 === 0 ? colores.white : colores.secondaryGray,
   };

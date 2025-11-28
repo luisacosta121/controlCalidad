@@ -31,7 +31,7 @@ const TablaParametros = ({ parametros, onEditar, onEliminar }) => {
           {/* Encabezado */}
           <div style={headerRowStyle}>
             <span>SECTOR</span>
-            <span>PARÁMETRO</span>
+            <span>PARAMETRO</span>
             <span>OBLIGATORIO</span>
             <span>ESTADO</span>
             <span style={{ textAlign: "center" }}>ACCIONES</span>

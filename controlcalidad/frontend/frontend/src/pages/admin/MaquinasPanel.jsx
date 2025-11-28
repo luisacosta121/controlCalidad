@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TablaMaquinas from "../../components/TablaMaquinas";
 import FormularioMaquina from "../../components/FormularioMaquina";
+import Modal from "../../components/Modal";
 import PrimaryButton from "../../components/PrimaryButton";
 import colores from "../../styles/colores";
 import { buttonSizes } from "../../styles/buttonSize";
@@ -12,6 +13,8 @@ const MaquinasPanel = () => {
   const [busqueda, setBusqueda] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [maquinaSeleccionada, setMaquinaSeleccionada] = useState(null);
+  const [showModalEliminar, setShowModalEliminar] = useState(false);
+  const [maquinaAEliminar, setMaquinaAEliminar] = useState(null);
 
   const maquinasFiltradas = busqueda.trim() === ""
     ? maquinas
@@ -60,14 +63,22 @@ const MaquinasPanel = () => {
   };
 
   const handleEliminar = (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar esta máquina?")) return;
+    const maquina = maquinas.find(m => m.id === id);
+    setMaquinaAEliminar(maquina);
+    setShowModalEliminar(true);
+  };
 
-    fetch(`http://localhost:8081/maquinas/${id}`, {
+  const confirmarEliminar = () => {
+    if (!maquinaAEliminar) return;
+
+    fetch(`http://localhost:8081/maquinas/${maquinaAEliminar.id}`, {
       method: "DELETE",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Error al eliminar máquina");
         toast.success("Máquina eliminada correctamente");
+        setShowModalEliminar(false);
+        setMaquinaAEliminar(null);
         cargarMaquinas();
       })
       .catch(() => toast.error("Error al eliminar máquina"));
@@ -82,7 +93,7 @@ const MaquinasPanel = () => {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>GESTIÓN DE MÁQUINAS</h2>
+        <h2 style={styles.title}>GESTION DE MAQUINAS</h2>
       </div>
 
       {/* Barra de búsqueda */}
@@ -91,7 +102,7 @@ const MaquinasPanel = () => {
           type="text"
           placeholder="Buscar por sector o máquina"
           value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
           style={styles.searchInput}
         />
       </div>
@@ -99,8 +110,8 @@ const MaquinasPanel = () => {
       {/* Tabla de máquinas */}
       <div style={styles.tableContainer}>
         {maquinasFiltradas.length === 0 ? (
-          <p style={styles.emptyMessage}>
-            {busqueda ? "No se encontraron máquinas" : "No hay máquinas registradas"}
+          <p style={{ ...styles.emptyMessage, color: colores.primaryGray, fontSize: fontSizes.dropDownText }}>
+            {busqueda ? "NO SE ENCONTRARON MAQUINAS" : "NO HAY MAQUINAS REGISTRADAS"}
           </p>
         ) : (
           <TablaMaquinas
@@ -114,7 +125,7 @@ const MaquinasPanel = () => {
       {/* Botón crear nueva máquina */}
       <div style={styles.buttonContainer}>
         <PrimaryButton
-          text="NUEVA MÁQUINA"
+          text="NUEVA MAQUINA"
           onClick={handleNuevaMaquina}
           color={colores.primaryBlue}
           textColor={colores.white}
@@ -131,6 +142,29 @@ const MaquinasPanel = () => {
         maquina={maquinaSeleccionada}
         onGuardar={cargarMaquinas}
       />
+
+      <Modal
+        show={showModalEliminar}
+        title="ELIMINAR MAQUINA"
+        width="500px"
+        onCancel={() => {
+          setShowModalEliminar(false);
+          setMaquinaAEliminar(null);
+        }}
+        onConfirm={confirmarEliminar}
+      >
+        <div style={{ padding: "20px" }}>
+          <p style={{ fontSize: fontSizes.button, marginBottom: "10px" }}>
+            ¿ESTÁ SEGURO DE ELIMINAR ESTA MAQUINA?
+          </p>
+          <p style={{ fontSize: fontSizes.button, color: colores.black, marginBottom: "5px" }}>
+            <strong>NUMERO DE MAQUINA:</strong> {maquinaAEliminar?.numero}
+          </p>
+          <p style={{ fontSize: fontSizes.button, color: colores.black }}>
+            <strong>SECTOR:</strong> {maquinaAEliminar?.sector}
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };

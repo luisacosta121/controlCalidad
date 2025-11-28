@@ -99,18 +99,23 @@ const FormularioMaquina = ({ isOpen, onClose, maquina, onGuardar }) => {
   return (
     <Modal
       show={isOpen}
-      title={formData.id ? "EDITAR MÁQUINA" : "NUEVA MÁQUINA"}
+      title={formData.id ? "EDITAR MAQUINA" : "NUEVA MAQUINA"}
       onConfirm={handleSubmit}
       onCancel={onClose}
       showButtons={true}
-      width="600px"
+      width="400px"
     >
       <div>
         <InputField
-          label="NÚMERO"
+          label="NUMERO"
           value={formData.numero}
-          onChange={(e) => handleChange("numero", e.target.value)}
-          type="number"
+          onChange={(e) => {
+            let valor = e.target.value;
+            valor = valor.replace(/[^0-9]/g, "");
+            valor = valor.slice(0, 2);
+            handleChange("numero", valor);
+          }}
+          width="200px"
           placeholder="Ingrese número de máquina"
           required
         />

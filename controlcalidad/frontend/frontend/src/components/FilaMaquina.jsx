@@ -15,7 +15,7 @@ const FilaMaquina = ({ maquina, index, onEditar, onEliminar }) => {
     color: colores.black,
     fontSize: fontSizes.textList,
     borderLeft: `4px solid ${colores.primaryOrange}`,
-    fontWeight: "600",
+    fontWeight: "regular",
     boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
     backgroundColor: index % 2 === 0 ? colores.white : colores.secondaryGray,
   };
@@ -29,7 +29,7 @@ const FilaMaquina = ({ maquina, index, onEditar, onEliminar }) => {
   return (
     <div style={rowStyle}>
       <span>{maquina.sector}</span>
-      <span>MÁQUINA {maquina.numero}</span>
+      <span>MAQUINA {maquina.numero}</span>
       <span style={{ display: "flex", justifyContent: "center" }}>
         <SecondaryButton
           text={maquina.activo ? "ACTIVO" : "INACTIVO"}

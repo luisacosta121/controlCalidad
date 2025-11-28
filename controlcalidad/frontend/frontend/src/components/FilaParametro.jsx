@@ -15,7 +15,7 @@ const FilaParametro = ({ parametro, index, onEditar, onEliminar }) => {
     color: colores.black,
     fontSize: fontSizes.textList,
     borderLeft: `4px solid ${colores.primaryOrange}`,
-    fontWeight: "600",
+    fontWeight: "normal",
     boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
     backgroundColor: index % 2 === 0 ? colores.white : colores.secondaryGray,
   };

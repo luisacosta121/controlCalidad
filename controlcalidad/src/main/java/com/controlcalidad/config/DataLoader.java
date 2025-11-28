@@ -43,7 +43,7 @@ public class DataLoader implements CommandLineRunner {
         Sector impresion = sectorRepo.save(Sector.builder().sector(SectorEnum.IMPRESION).build());
         Sector confeccion = sectorRepo.save(Sector.builder().sector(SectorEnum.CONFECCION).build());
         Sector refilado = sectorRepo.save(Sector.builder().sector(SectorEnum.REFILADO).build());
-
+/*
         // ===========================
         // EXTRUSION
         // ===========================
@@ -82,7 +82,8 @@ public class DataLoader implements CommandLineRunner {
                 .nombreParametro("textura")
                 .orden(7)
                 .build());
-
+*/
+/*
         // ===========================
         // IMPRESION
         // ===========================
@@ -106,7 +107,8 @@ public class DataLoader implements CommandLineRunner {
                 .nombreParametro("retintado")
                 .orden(4)
                 .build());
-
+*/
+/*
         // ===========================
         // CONFECCION
         // ===========================
@@ -125,8 +127,8 @@ public class DataLoader implements CommandLineRunner {
                 .nombreParametro("presentacion")
                 .orden(3)
                 .build());
-
-
+*/
+/*
         // ===========================
         // REFILADO
         // ===========================
@@ -144,7 +146,7 @@ public class DataLoader implements CommandLineRunner {
                 .sector(refilado)
                 .nombreParametro("bujes")
                 .orden(3)
-                .build());
+                .build());*/
         }
     }
 

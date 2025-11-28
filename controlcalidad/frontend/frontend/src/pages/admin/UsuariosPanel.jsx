@@ -12,6 +12,8 @@ const UsuariosPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showModalEliminar, setShowModalEliminar] = useState(false);
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState(null);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [formData, setFormData] = useState({
@@ -75,13 +77,13 @@ const UsuariosPanel = () => {
 
   const handleSubmit = () => {
     if (!formData.usuario || !formData.nombre || !formData.apellido || !formData.rol) {
-      toast.error("Usuario, Nombre, Apellido y Rol son obligatorios");
+      toast.error("USUARIO, NOMBRE, APELLIDO Y ROL SON OBLIGATORIOS");
       return;
     }
 
     // Validar contraseña solo para ADMIN
-    if (formData.rol === "ADMIN" && !formData.passwordHash && !modoEdicion) {
-      toast.error("La contraseña es obligatoria para usuarios ADMIN");
+    if (formData.rol === "ADMIN" && !formData.passwordHash) {
+      toast.error("LA CONTRASEÑA ES OBLIGATORIA PARA ROL ADMIN");
       return;
     }
 
@@ -104,7 +106,7 @@ const UsuariosPanel = () => {
     })
       .then((res) => res.json())
       .then(() => {
-        toast.success(modoEdicion ? "Usuario actualizado" : "Usuario creado");
+        toast.success(modoEdicion ? "USUARIO ACTUALIZADO" : "USUARIO CREADO");
         cargarUsuarios();
         setShowModal(false);
       })
@@ -112,17 +114,25 @@ const UsuariosPanel = () => {
   };
 
   const handleEliminar = (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar este usuario?")) return;
+    const usuario = usuarios.find(u => u.id === id);
+    setUsuarioAEliminar(usuario);
+    setShowModalEliminar(true);
+  };
 
-    fetch(`http://localhost:8081/usuarios/${id}`, { method: "DELETE" })
+  const confirmarEliminar = () => {
+    if (!usuarioAEliminar) return;
+
+    fetch(`http://localhost:8081/usuarios/${usuarioAEliminar.id}`, { method: "DELETE" })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error al eliminar usuario");
         }
-        toast.success("Usuario eliminado");
+        toast.success("USUARIO ELIMINADO");
         cargarUsuarios();
+        setShowModalEliminar(false);
+        setUsuarioAEliminar(null);
       })
-      .catch(() => toast.error("Error al eliminar usuario"));
+      .catch(() => toast.error("ERROR AL ELIMINAR USUARIO"));
   };
 
   return (
@@ -138,7 +148,7 @@ const UsuariosPanel = () => {
           type="text"
           placeholder="Buscar por usuario, nombre o apellido"
           value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
           style={styles.searchInput}
           width="500px"
         />
@@ -147,8 +157,8 @@ const UsuariosPanel = () => {
       {/* Tabla de usuarios */}
       <div style={styles.tableContainer}>
         {usuariosFiltrados.length === 0 ? (
-          <p style={styles.emptyMessage}>
-            {busqueda ? "No se encontraron usuarios" : "No hay usuarios registrados"}
+          <p style={{ ...styles.emptyMessage, color: colores.primaryGray, fontSize: fontSizes.dropDownText }}>
+            {busqueda ? "NO SE ENCONTRARON USUARIOS" : "NO HAY USUARIOS REGISTRADOS"}
           </p>
         ) : (
           <TablaUsuarios
@@ -176,7 +186,7 @@ const UsuariosPanel = () => {
       {/* Modal de crear/editar */}
       <Modal
         show={showModal}
-        title={modoEdicion ? "Editar Usuario" : "Nuevo Usuario"}
+        title={modoEdicion ? "EDITAR USUARIO" : "NUEVO USUARIO"}
         onCancel={() => setShowModal(false)}
         onConfirm={handleSubmit}
       >
@@ -185,6 +195,29 @@ const UsuariosPanel = () => {
           setFormData={setFormData}
           modoEdicion={modoEdicion}
         />
+      </Modal>
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal
+        show={showModalEliminar}
+        title="ELIMINAR USUARIO"
+        onCancel={() => {
+          setShowModalEliminar(false);
+          setUsuarioAEliminar(null);
+        }}
+        onConfirm={confirmarEliminar}
+      >
+        <div style={{ padding: "20px" }}>
+          <p style={{ fontSize: fontSizes.button, marginBottom: "10px" }}>
+            ¿ESTÁ SEGURO DE ELIMINAR ESTE USUARIO?
+          </p>
+          <p style={{ fontSize: fontSizes.button, color: colores.black, marginBottom: "5px" }}>
+            <strong>USUARIO:</strong> {usuarioAEliminar?.usuario}
+          </p>
+          <p style={{ fontSize: fontSizes.button, color: colores.black }}>
+            <strong>NOMBRE:</strong> {usuarioAEliminar?.nombre} {usuarioAEliminar?.apellido}
+          </p>
+        </div>
       </Modal>
     </div>
   );

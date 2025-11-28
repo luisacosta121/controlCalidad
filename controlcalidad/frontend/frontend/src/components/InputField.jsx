@@ -39,26 +39,47 @@ const InputField = ({
                 {label}
             </label>
 
-            {/* INPUT (CAMPO DE TEXTO) */}
-            <input
-                type="text" // TIPO DE INPUT
-                value={value}
-                onChange={onChange}
-                placeholder={placeholder} // TEXTO PLACEHOLDER
-                maxLength={maxLength} // LONGITUD MÁXIMA DEL INPUT
-                readOnly={readOnly}   // SI ES TRUE EL INPUT NO SE PUEDE EDITAR
-                style={{
-                    width: width,
-                    height: height,
-                    padding: "0 12px",
-                    borderRadius: "10px",
-                    border: `1px solid ${colores.black}`,
-                    backgroundColor: readOnly ? colores.white : colores.white, // COLOR DE FONDO SI ES READONLY
-                    fontSize: fontSizes.dropDownText,
-                    color: colores.black,
-                    outline: "none", // QUITA EL BORDE AZUL AL HACER CLICK
-                }}
-            />
+            {/* CONTENEDOR DEL INPUT CON CONTADOR */}
+            <div style={{ position: "relative", width: width }}>
+                {/* INPUT (CAMPO DE TEXTO) */}
+                <input
+                    type="text" // TIPO DE INPUT
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder} // TEXTO PLACEHOLDER
+                    maxLength={maxLength} // LONGITUD MÁXIMA DEL INPUT
+                    readOnly={readOnly}   // SI ES TRUE EL INPUT NO SE PUEDE EDITAR
+                    style={{
+                        width: "100%",
+                        height: height,
+                        padding: "0 12px",
+                        paddingRight: maxLength ? "50px" : "12px", // ESPACIO PARA EL CONTADOR
+                        borderRadius: "10px",
+                        border: `1px solid ${colores.black}`,
+                        backgroundColor: readOnly ? colores.white : colores.white, // COLOR DE FONDO SI ES READONLY
+                        fontSize: fontSizes.dropDownText,
+                        color: colores.black,
+                        outline: "none", // QUITA EL BORDE AZUL AL HACER CLICK
+                        boxSizing: "border-box"
+                    }}
+                />
+                
+                {/* CONTADOR DE CARACTERES DENTRO DEL INPUT */}
+                {maxLength && (
+                    <span style={{
+                        position: "absolute",
+                        right: "12px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        fontSize: "11px",
+                        color: colores.primaryRed,
+                        fontWeight: "500",
+                        pointerEvents: "none" // PARA QUE NO INTERFIERA CON EL CLICK
+                    }}>
+                        {value.length}/{maxLength}
+                    </span>
+                )}
+            </div>
         </div>
     );
 };
